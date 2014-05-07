@@ -128,6 +128,8 @@ public class BusinessLogicTest extends FunctionalTestCase {
 		createAccountInBFlow.initialise();
 		createAccountInBFlow.process(getTestEvent(createdAccountInB, MessageExchangePattern.REQUEST_RESPONSE));
 	
+		Thread.sleep(1001); // this is here to prevent equal LastModifiedDate
+		
 		// Create accounts in source system to be or not to be synced
 	
 		// This account should be synced

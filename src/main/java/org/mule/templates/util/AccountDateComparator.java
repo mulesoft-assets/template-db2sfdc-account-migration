@@ -1,5 +1,6 @@
 package org.mule.templates.util;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.commons.lang.Validate;
@@ -28,7 +29,7 @@ public class AccountDateComparator {
 	 *            DB account map
 	 * @return true if the last activity date from accountA is after the one from accountB
 	 */
-	public static boolean isAfter(Map<String, String> accountA, Map<String, String> accountB) {
+	public static boolean isAfter(Map<String, Object> accountA, Map<String, Object> accountB) {
 		Validate.notNull(accountA, "The account A should not be null");
 		Validate.notNull(accountB, "The account B should not be null");
 
@@ -39,9 +40,13 @@ public class AccountDateComparator {
 		}
 		
 		DateTimeFormatter formatter = ISODateTimeFormat.dateTimeParser();
-		DateTime LastModifiedDateOfA = new DateTime(accountA.get(LAST_MODIFIED_DATE));
-		DateTime LastModifiedDateOfB = formatter.parseDateTime((String) accountB.get(LAST_MODIFIED_DATE));
+		Object objectA = accountA.get(LAST_MODIFIED_DATE);
+		Validate.isTrue(objectA instanceof Date, "LastModifiedDate of account A must be java.util.Date or subclass");
+		DateTime LastModifiedDateOfA = new DateTime((Date) objectA);
+		
+		Object objectB = accountB.get(LAST_MODIFIED_DATE);
+		Validate.isTrue(objectB instanceof String, "LastModifiedDate of account B must be String");
+		DateTime LastModifiedDateOfB = formatter.parseDateTime((String) objectB);
 		return LastModifiedDateOfA.isAfter(LastModifiedDateOfB);
-
 	}
 }
