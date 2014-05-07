@@ -26,7 +26,7 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
         <batch:threading-profile poolExhaustedAction="WAIT"/>
         <batch:input>
             <db:select config-ref="Database" doc:name="Database">
-                <db:parameterized-query><![CDATA[SELECT AccountNumber, AccountSource, AnnualRevenue, BillingCity, BillingCountry, BillingPostalCode, BillingState, BillingStreet, Description, Fax, Industry, LastModifiedDate, Name, NumberOfEmployees, OwnerId, Ownership, ParentId, Phone, Rating, ShippingCity, ShippingCountry, ShippingPostalCode, ShippingState, ShippingStreet, Sic, SicDesc, Site, TickerSymbol, Type, Website FROM Account WHERE NumberOfEmployees > 5000 AND (Industry = 'Education' OR Industry = 'Government')]]></db:parameterized-query>
+                <db:parameterized-query><![CDATA[SELECT AccountNumber, AccountSource, AnnualRevenue, BillingCity, BillingCountry, BillingPostalCode, BillingState, BillingStreet, Description, Fax, Industry, LastModifiedDate, Name, NumberOfEmployees, Ownership, Phone, Rating, ShippingCity, ShippingCountry, ShippingPostalCode, ShippingState, ShippingStreet, Sic, SicDesc, Site, TickerSymbol, Type, Website FROM Account WHERE NumberOfEmployees > 5000 AND (Industry = 'Education' OR Industry = 'Government')]]></db:parameterized-query>
             </db:select>
         </batch:input> 
         <batch:process-records>
