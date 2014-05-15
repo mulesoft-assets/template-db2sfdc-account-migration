@@ -38,8 +38,14 @@ Simple steps to get DB to SFDC Accounts Migration running.
 
 **Note:** This particular Anypoint Template illustrate the migration use case between SalesForce and a Database, thus it requires a DB instance to work.
 The Anypoint Template comes packaged with a SQL script to create the DB table that uses. 
-It is the user responsability to use that script to create the table in an available schema and change the configuration accordingly.
-The SQL script file can be found in [src/main/resources/account.sql] (../master/src/main/resources/account.sql)
+It is the user responsibility to use that script to create the table in an available schema and change the configuration accordingly. The SQL script file can be found in [src/main/resources/account.sql](../master/src/main/resources/account.sql).
+
+This template is customized for MySQL. To use it with different SQL implementation, some changes are necessary:
+
+* update SQL script dialect to desired one
+* replace MySQL driver library dependency to desired one in [POM](pom.xml)
+* replace attribute `driverClassName` of `db:generic-config` element with class name of desired JDBC driver in [src/main/app/config.xml](../master/src/main/app/config.xml)
+* update JDBC URL in `mule.*.properties` file
 
 In any of the ways you would like to run this Template this is an example of the output you'll see after hitting the HTTP endpoint:
 
@@ -66,7 +72,7 @@ Once you have imported your Anypoint Template into Anypoint Studio you need to f
 
 
 ### Running on Mule ESB stand alone  <a name="runonmuleesbstandalone"/>
-Complete all properties in one of the property files, for example in [mule.prod.properties] (../blob/master/src/main/resources/mule.prod.properties) and run your app with the corresponding environment variable to use it. To follow the example, this will be `mule.env=prod`.
+Complete all properties in one of the property files, for example in [mule.prod.properties](../blob/master/src/main/resources/mule.prod.properties) and run your app with the corresponding environment variable to use it. To follow the example, this will be `mule.env=prod`.
 
 Once your app is all set and started, there is no need to do anything else. The application will poll SalesForce to know if there are any newly created or updated objects and synchronice them.
 
@@ -89,8 +95,7 @@ In order to use this Template you need to configure properties (Credentials, con
 + http.port `9090` 
 
 #### Database Connector configuration for company B
-+ db.jdbcUrl=jdbc:mysql://localhost:3306/mule?user=mule&password=mule
-+ db.driverClassName=com.mysql.jdbc.Driver
++ db.jdbcUrl `jdbc:mysql://localhost:3306/mule?user=mule&password=mule`
 
 #### SalesForce Connector configuration for company B
 + sfdc.username `joan.baez@orgb`
