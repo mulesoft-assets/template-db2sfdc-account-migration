@@ -4,10 +4,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.templates</groupId>
-	<artifactId>template-sfdc2sfdc-account-migration</artifactId>
+	<artifactId>template-db2sfdc-account-migration</artifactId>
 	<packaging>mule</packaging>
 	<version>1.0.0</version>
-	<name>SFDC2SFDCAccountsMigration Mule Template Project</name>
+	<name>db2sfdc-account-migration Mule Template Project</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

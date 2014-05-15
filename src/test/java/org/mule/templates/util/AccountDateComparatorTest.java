@@ -9,8 +9,6 @@ import junit.framework.Assert;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.junit.Test;
-import org.mule.api.transformer.TransformerException;
-import org.mule.templates.util.AccountDateComparator;
 
 /**
  * 

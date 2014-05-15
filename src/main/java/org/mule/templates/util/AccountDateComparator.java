@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.Validate;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
@@ -42,7 +41,7 @@ public class AccountDateComparator {
 		DateTimeFormatter formatter = ISODateTimeFormat.dateTimeParser();
 		Object objectA = accountA.get(LAST_MODIFIED_DATE);
 		Validate.isTrue(objectA instanceof Date, "LastModifiedDate of account A must be java.util.Date or subclass");
-		DateTime LastModifiedDateOfA = new DateTime((Date) objectA);
+		DateTime LastModifiedDateOfA = new DateTime(objectA);
 		
 		Object objectB = accountB.get(LAST_MODIFIED_DATE);
 		Validate.isTrue(objectB instanceof String, "LastModifiedDate of account B must be String");
