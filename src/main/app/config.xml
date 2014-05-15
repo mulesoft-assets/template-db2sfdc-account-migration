@@ -26,6 +26,6 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <sfdc:connection-pooling-profile initialisationPolicy="INITIALISE_ONE" exhaustedAction="WHEN_EXHAUSTED_GROW"/>
     </sfdc:config>
     
-    <db:generic-config name="Database" url="${db.jdbcUrl}" driverClassName="${db.driverClassName}" doc:name="Database instance of organization B."/>
+    <db:generic-config name="Database" url="${db.jdbcUrl}" driverClassName="com.mysql.jdbc.Driver" doc:name="Database instance of organization B."/>
     
 </mule>
