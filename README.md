@@ -21,23 +21,21 @@ Note that using this template is subject to the conditions of this [License Agre
 Please review the terms of the license before downloading and using this template. In short, you are allowed to use the template for free with Mule ESB Enterprise Edition, CloudHub, or as a trial in Anypoint Studio.
 
 # Use Case <a name="usecase"/>
-As a Salesforce admin I want to synchronize accounts from Database to Salesforce organization.
-
-This Template should serve as a foundation for the process of migrating accounts from Database to Salesfoce instance, being able to specify filtering criteria and desired behavior when an account already exists in the destination org. 
+This Template should serve as a foundation for the process of migrating accounts from database to Salesforce instance, being able to specify filtering criteria and desired behavior when an account already exists in the destination instance. 
 
 As implemented, this Template leverage the [Batch Module](http://www.mulesoft.org/documentation/display/current/Batch+Processing).
 The batch job is divided in  Input, Process and On Complete stages.
-During the Input stage the Template will go to the Database and query all the existing Accounts that match the filter criteria.
-During the Process stage, each Account will be filtered depending on, if it has an existing matching account in the SFDC Org B and if the last updated date of the later is greater than the one of Database Org A.
-The last step of the Process stage will group the accounts and create them in SFDC Org B.
+During the Input stage the Template will query from the database all the existing Accounts that match the filter criteria.
+During the Process stage, each Account will be filtered depending on, if it has an existing matching account in the Salesforce and if the last updated date of the later is greater than the one from the database.
+The last step of the Process stage will group the accounts and create them in Salesforce instance.
 Finally during the On Complete stage the Template will both output statistics data into the console and send a notification email with the results of the batch execution. 
 
 # Run it! <a name="runit"/>
 
-Simple steps to get DB to SFDC Accounts Migration running.
+Simple steps to get database to Salesforce Accounts Migration running.
 
-**Note:** This particular Anypoint Template illustrate the migration use case between SalesForce and a Database, thus it requires a DB instance to work.
-The Anypoint Template comes packaged with a SQL script to create the DB table that uses. 
+**Note:** This particular Anypoint Template illustrate the migration use case between Salesforce and a database, thus it requires a database instance to work.
+The Anypoint Template comes packaged with a SQL script to create the database table that uses. 
 It is the user responsibility to use that script to create the table in an available schema and change the configuration accordingly. The SQL script file can be found in [src/main/resources/account.sql](../master/src/main/resources/account.sql).
 
 This template is customized for MySQL. To use it with different SQL implementation, some changes are necessary:
@@ -98,7 +96,7 @@ In order to use this Template you need to configure properties (Credentials, con
 + db.jdbcUrl `jdbc:mysql://localhost:3306/mule?user=mule&password=mule`
 
 #### SalesForce Connector configuration for company B
-+ sfdc.username `joan.baez@orgb`
++ sfdc.username `joan.baez@org`
 + sfdc.password `JoanBaez456`
 + sfdc.securityToken `ces56arl7apQs56XTddf34X`
 + sfdc.url `https://login.salesforce.com/services/Soap/u/26.0`
@@ -125,7 +123,7 @@ For instance if 10 records are fetched from origin instance, then 11 API calls w
 # Customize It!<a name="customizeit"/>
 
 This brief guide intends to give a high level idea of how this Template is built and how you can change it according to your needs.
-As mule applications are based on XML files, this page will be organised by describing all the XML that conform the Template.
+As mule applications are based on XML files, this page will be organized by describing all the XML that conform the Template.
 Of course more files will be found such as Test Classes and [Mule Application Files](http://www.mulesoft.org/documentation/display/current/Application+Format), but to keep it simple we will focus on the XMLs.
 
 Here is a list of the main XML files you'll find in this application:

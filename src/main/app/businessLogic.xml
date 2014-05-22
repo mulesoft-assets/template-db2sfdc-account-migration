@@ -30,22 +30,22 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
             </db:select>
         </batch:input> 
         <batch:process-records>
-            <batch:step name="getAccountInBStep">
-                <enricher source="#[payload]" target="#[recordVars['accountInB']]" doc:name="store result in record var 'accountInB'">
+            <batch:step name="getAccountInSalesforceStep">
+                <enricher source="#[payload]" target="#[recordVars['accountInSalesforce']]" doc:name="store result in record var 'accountInSalesforce'">
                     <sfdc:query-single config-ref="Salesforce" query="SELECT Id, Name, LastModifiedDate FROM Account WHERE Name = '#[payload['Name']]'" doc:name="query Account from Salesforce"/>
                 </enricher>
             </batch:step>
-            <batch:step name="selectNewerAccountStep" filter-expression="#[recordVars['accountInB'] is NullPayload]">
+            <batch:step name="selectNewerAccountStep" accept-expression="#[!(recordVars['accountInSalesforce'] is NullPayload)]">
                 <choice doc:name="Choice">
-                    <when expression="#[org.mule.templates.util.AccountDateComparator.isAfter(payload, recordVars['accountInB'])]">
-                        <expression-component doc:name="define Id in SalesForce Intance B"><![CDATA[payload['Id'] = recordVars['accountInB']['Id']]]></expression-component>
+                    <when expression="#[org.mule.templates.util.AccountDateComparator.isAfter(payload, recordVars['accountInSalesforce'])]">
+                        <expression-component doc:name="define Id in SalesForce Instance"><![CDATA[payload['Id'] = recordVars['accountInSalesforce']['Id']]]></expression-component>
                     </when>
                     <otherwise>
                         <set-payload doc:name="set to null to skip this account" value="#[return null]"/>
                     </otherwise>
                 </choice>
             </batch:step>
-            <batch:step name="createAccountsInBStep" filter-expression="#[payload is NullPayload]">
+            <batch:step name="createAccountsInSalesforceStep" accept-expression="#[!(payload is NullPayload)]">
                 <expression-component doc:name="remove field LastModifiedDate"><![CDATA[payload.remove('LastModifiedDate');]]></expression-component>
                 <expression-component doc:name="changing type of field NumberOfEmployees to int"><![CDATA[if (payload.get('NumberOfEmployees') == null) {
 	payload.remove('NumberOfEmployees') 

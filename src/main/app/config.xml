@@ -22,10 +22,10 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     
     	<smtp:gmail-connector name="gmailConnector" doc:name="Gmail" validateConnections="true" doc:description="This is the connector used to send email notifications. You should change its configuration to select a different email provider"/>
     
-    <sfdc:config name="Salesforce" username="${sfdc.username}" password="${sfdc.password}" securityToken="${sfdc.securityToken}" url="${sfdc.url}" doc:name="Salesforce" doc:description="SalesForce instance of organization A.">
+    <sfdc:config name="Salesforce" username="${sfdc.username}" password="${sfdc.password}" securityToken="${sfdc.securityToken}" url="${sfdc.url}" doc:name="Salesforce" doc:description="SalesForce instance">
         <sfdc:connection-pooling-profile initialisationPolicy="INITIALISE_ONE" exhaustedAction="WHEN_EXHAUSTED_GROW"/>
     </sfdc:config>
     
-    <db:generic-config name="Database" url="${db.jdbcUrl}" driverClassName="com.mysql.jdbc.Driver" doc:name="Database instance of organization B."/>
+    <db:generic-config name="Database" url="${db.jdbcUrl}" driverClassName="com.mysql.jdbc.Driver" doc:name="Database instance"/>
     
 </mule>
