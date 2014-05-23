@@ -26,80 +26,86 @@ public class AccountDateComparatorTest {
 
 	private static final DateTimeFormatter ISO_DATE_FORMATTER = ISODateTimeFormat.dateTimeParser();
 
-	private static final Timestamp TEST_DATETIME_TIMESTAMP = new Timestamp(ISO_DATE_FORMATTER.parseDateTime(TEST_DATETIME_STRING).toDate().getTime());
+	private static final Timestamp TEST_DATETIME_TIMESTAMP
+			= new Timestamp(ISO_DATE_FORMATTER.parseDateTime(TEST_DATETIME_STRING).toDate().getTime());
 	
-	private static final Timestamp TEST_DATETIME_TIMESTAMP2 = new Timestamp(ISO_DATE_FORMATTER.parseDateTime(TEST_DATETIME_STRING2).toDate().getTime());
+	private static final Timestamp TEST_DATETIME_TIMESTAMP2
+			= new Timestamp(ISO_DATE_FORMATTER.parseDateTime(TEST_DATETIME_STRING2).toDate().getTime());
 
 	@Test(expected = IllegalArgumentException.class)
 	public void nullAccountA() {
-		Map<String, Object> accountA = null;
+		Map<String, Object> databaseAccount = null;
 
-		Map<String, Object> accountB = new HashMap<String, Object>();
-		accountB.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_STRING);
+		Map<String, Object> salesforceAccount = new HashMap<String, Object>();
+		salesforceAccount.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_STRING);
 
-		AccountDateComparator.isAfter(accountA, accountB);
+		AccountDateComparator.isAfter(databaseAccount, salesforceAccount);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void nullAccountB() {
-		Map<String, Object> accountA = new HashMap<String, Object>();
-		accountA.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_TIMESTAMP);
+		Map<String, Object> databaseAccount = new HashMap<String, Object>();
+		databaseAccount.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_TIMESTAMP);
 
-		Map<String, Object> accountB = null;
+		Map<String, Object> salesforceAccount = null;
 
-		AccountDateComparator.isAfter(accountA, accountB);
+		AccountDateComparator.isAfter(databaseAccount, salesforceAccount);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void malFormedAccountA() {
-		Map<String, Object> accountA = new HashMap<String, Object>();
+		Map<String, Object> databaseAccount = new HashMap<String, Object>();
 
-		Map<String, Object> accountB = new HashMap<String, Object>();
-		accountB.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_STRING);
+		Map<String, Object> salesforceAccount = new HashMap<String, Object>();
+		salesforceAccount.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_STRING);
 
-		AccountDateComparator.isAfter(accountA, accountB);
+		AccountDateComparator.isAfter(databaseAccount, salesforceAccount);
 	}
 
 	public void emptyAccountB() {
-		Map<String, Object> accountA = new HashMap<String, Object>();
-		accountA.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_TIMESTAMP);
+		Map<String, Object> databaseAccount = new HashMap<String, Object>();
+		databaseAccount.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_TIMESTAMP);
 
-		Map<String, Object> accountB = new HashMap<String, Object>();
+		Map<String, Object> salesforceAccount = new HashMap<String, Object>();
 
-		Assert.assertTrue("The account A should be after the account B", AccountDateComparator.isAfter(accountA, accountB));
+		Assert.assertTrue("The Database account should be after the Salesforce account",
+				AccountDateComparator.isAfter(databaseAccount, salesforceAccount));
 	}
 
 	@Test
-	public void accountAIsAfterAccountB() {
-		Map<String, Object> accountA = new HashMap<String, Object>();
-		accountA.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_TIMESTAMP2);
+	public void databaseAccountIsAfterAccountB() {
+		Map<String, Object> databaseAccount = new HashMap<String, Object>();
+		databaseAccount.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_TIMESTAMP2);
 
-		Map<String, Object> accountB = new HashMap<String, Object>();
-		accountB.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_STRING);
+		Map<String, Object> salesforceAccount = new HashMap<String, Object>();
+		salesforceAccount.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_STRING);
 
-		Assert.assertTrue("The account A should be after the account B", AccountDateComparator.isAfter(accountA, accountB));
+		Assert.assertTrue("The Database account should be after the Salesforce account",
+				AccountDateComparator.isAfter(databaseAccount, salesforceAccount));
 	}
 
 	@Test
-	public void accountAIsNotAfterAccountB() {
-		Map<String, Object> accountA = new HashMap<String, Object>();
-		accountA.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_TIMESTAMP);
+	public void databaseAccountIsNotAfterAccountB() {
+		Map<String, Object> databaseAccount = new HashMap<String, Object>();
+		databaseAccount.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_TIMESTAMP);
 
-		Map<String, Object> accountB = new HashMap<String, Object>();
-		accountB.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_STRING);
+		Map<String, Object> salesforceAccount = new HashMap<String, Object>();
+		salesforceAccount.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_STRING);
 
-		Assert.assertFalse("The account A should not be after the account B", AccountDateComparator.isAfter(accountA, accountB));
+		Assert.assertFalse("The Database account should not be after the Salesforce account",
+				AccountDateComparator.isAfter(databaseAccount, salesforceAccount));
 	}
 
 	@Test
-	public void accountAIsTheSameThatAccountB() {
-		Map<String, Object> accountA = new HashMap<String, Object>();
-		accountA.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_TIMESTAMP);
+	public void databaseAccountIsTheSameThatAccountB() {
+		Map<String, Object> databaseAccount = new HashMap<String, Object>();
+		databaseAccount.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_TIMESTAMP);
 
-		Map<String, Object> accountB = new HashMap<String, Object>();
-		accountB.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_STRING);
+		Map<String, Object> salesforceAccount = new HashMap<String, Object>();
+		salesforceAccount.put(KEY_LAST_MODIFIED_DATE, TEST_DATETIME_STRING);
 
-		Assert.assertFalse("The account A should not be after the account B", AccountDateComparator.isAfter(accountA, accountB));
+		Assert.assertFalse("The Database account should not be after the Salesforce account",
+				AccountDateComparator.isAfter(databaseAccount, salesforceAccount));
 	}
 
 }
