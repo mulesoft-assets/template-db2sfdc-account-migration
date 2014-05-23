@@ -21,20 +21,20 @@ Note that using this template is subject to the conditions of this [License Agre
 Please review the terms of the license before downloading and using this template. In short, you are allowed to use the template for free with Mule ESB Enterprise Edition, CloudHub, or as a trial in Anypoint Studio.
 
 # Use Case <a name="usecase"/>
-This Template should serve as a foundation for the process of migrating accounts from database to Salesforce instance, being able to specify filtering criteria and desired behavior when an account already exists in the destination instance. 
+This Template should serve as a foundation for the process of migrating accounts from Database to Salesforce instance, being able to specify filtering criteria and desired behavior when an account already exists in the destination instance. 
 
 As implemented, this Template leverage the [Batch Module](http://www.mulesoft.org/documentation/display/current/Batch+Processing).
 The batch job is divided in  Input, Process and On Complete stages.
-During the Input stage the Template will query from the database all the existing Accounts that match the filter criteria.
-During the Process stage, each Account will be filtered depending on, if it has an existing matching account in the Salesforce and if the last updated date of the later is greater than the one from the database.
+During the Input stage the Template will query from the Database all the existing Accounts that match the filter criteria.
+During the Process stage, each Account will be filtered depending on, if it has an existing matching account in the Salesforce and if the last updated date of the later is greater than the one from the Database.
 The last step of the Process stage will group the accounts and create them in Salesforce instance.
 Finally during the On Complete stage the Template will both output statistics data into the console and send a notification email with the results of the batch execution. 
 
 # Run it! <a name="runit"/>
 
-Simple steps to get database to Salesforce Accounts Migration running.
+Simple steps to get Database to Salesforce Accounts Migration running.
 
-**Note:** This particular Anypoint Template illustrate the migration use case between Salesforce and a database, thus it requires a database instance to work.
+**Note:** This particular Anypoint Template illustrate the migration use case between Salesforce and a Database, thus it requires a Database instance to work.
 The Anypoint Template comes packaged with a SQL script to create the database table that uses. 
 It is the user responsibility to use that script to create the table in an available schema and change the configuration accordingly. The SQL script file can be found in [src/main/resources/account.sql](../master/src/main/resources/account.sql).
 
@@ -92,10 +92,10 @@ In order to use this Template you need to configure properties (Credentials, con
 ### Application configuration
 + http.port `9090` 
 
-#### Database Connector configuration for company B
+#### Database Connector configuration
 + db.jdbcUrl `jdbc:mysql://localhost:3306/mule?user=mule&password=mule`
 
-#### SalesForce Connector configuration for company B
+#### SalesForce Connector configuration
 + sfdc.username `joan.baez@org`
 + sfdc.password `JoanBaez456`
 + sfdc.securityToken `ces56arl7apQs56XTddf34X`
