@@ -38,7 +38,7 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
                     <sfdc:query-single config-ref="Salesforce" query="SELECT Id, Name, LastModifiedDate FROM Account WHERE Name = '#[payload['Name']]'" doc:name="query Account from Salesforce"/>
                 </enricher>
             </batch:step>
-            <batch:step name="selectNewerAccountStep" accept-expression="#[!(recordVars['accountInSalesforce'] is NullPayload)]">
+            <batch:step name="selectNewerAccountStep" accept-expression="!(recordVars['accountInSalesforce'] is NullPayload)">
                 <choice doc:name="Choice">
                     <when expression="#[org.mule.templates.util.AccountDateComparator.isAfter(payload, recordVars['accountInSalesforce'])]">
                         <expression-component doc:name="define Id in SalesForce Instance"><![CDATA[payload['Id'] = recordVars['accountInSalesforce']['Id']]]></expression-component>
@@ -48,7 +48,7 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
                     </otherwise>
                 </choice>
             </batch:step>
-            <batch:step name="createAccountsInSalesforceStep" accept-expression="#[!(payload is NullPayload)]">
+            <batch:step name="createAccountsInSalesforceStep" accept-expression="!(payload is NullPayload)">
                 <expression-component doc:name="remove field LastModifiedDate"><![CDATA[payload.remove('LastModifiedDate');]]></expression-component>
                 <expression-component doc:name="changing type of field NumberOfEmployees to int"><![CDATA[if (payload.get('NumberOfEmployees') == null) {
 	payload.remove('NumberOfEmployees') 
