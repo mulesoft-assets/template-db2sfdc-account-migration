@@ -28,7 +28,8 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
         <batch:threading-profile poolExhaustedAction="WAIT"/>
         <batch:input>
             <db:select config-ref="Database" doc:name="Database">
-                <db:parameterized-query><![CDATA[SELECT AccountNumber, AccountSource, AnnualRevenue, BillingCity, BillingCountry, BillingPostalCode, BillingState, BillingStreet, Description, Fax, Industry, LastModifiedDate, Name, NumberOfEmployees, Ownership, Phone, Rating, ShippingCity, ShippingCountry, ShippingPostalCode, ShippingState, ShippingStreet, Sic, SicDesc, Site, TickerSymbol, Type, Website FROM Account WHERE NumberOfEmployees > 5000 AND (Industry = 'Education' OR Industry = 'Government')]]></db:parameterized-query>
+                <db:parameterized-query><![CDATA[SELECT AccountNumber, Description, Id, Name, NumberOfEmployees, Phone, Type, LastModifiedDate FROM Account WHERE NumberOfEmployees > 5000 AND (Industry = 'Education' OR Industry = 'Government')]]></db:parameterized-query>
+
 
             </db:select>
         </batch:input> 
@@ -49,8 +50,12 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
                 </choice>
             </batch:step>
             <batch:step name="createAccountsInSalesforceStep" accept-expression="!(payload is NullPayload)">
-                <expression-component doc:name="remove field LastModifiedDate"><![CDATA[payload.remove('LastModifiedDate');]]></expression-component>
-                <expression-component doc:name="changing type of field NumberOfEmployees to int"><![CDATA[if (payload.get('NumberOfEmployees') == null) {
+
+                <expression-component doc:name=" prepare to upsert"><![CDATA[// remove field LastModifiedDate
+payload.remove('LastModifiedDate');
+
+// changing type of field NumberOfEmployees to int
+if (payload.get('NumberOfEmployees') == null) {
 	payload.remove('NumberOfEmployees') 
 } else {
 	int intNumberOfEmployees = Integer.parseInt(payload.get('NumberOfEmployees'));
