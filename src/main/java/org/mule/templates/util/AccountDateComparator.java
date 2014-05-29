@@ -28,8 +28,8 @@ public class AccountDateComparator {
 	 * @return true if the last activity date from databaseAccount is after the one from salesforceAccount
 	 */
 	public static boolean isAfter(Map<String, Object> databaseAccount, Map<String, Object> salesforceAccount) {
-		Validate.notNull(databaseAccount, "The account Database must not be null");
-		Validate.notNull(salesforceAccount, "The account Salesforce must not be null");
+		Validate.notNull(databaseAccount, "Database account must not be null");
+		Validate.notNull(salesforceAccount, "Salesforce account must not be null");
 
 		Validate.isTrue(databaseAccount.containsKey(LAST_MODIFIED_DATE), "The Database account map should contain the key " + LAST_MODIFIED_DATE);
 
@@ -39,12 +39,12 @@ public class AccountDateComparator {
 		
 		Object maybeDatabaseDate = databaseAccount.get(LAST_MODIFIED_DATE);
 		Validate.isTrue(maybeDatabaseDate instanceof Date, "LastModifiedDate of Database account must be java.util.Date or subclass");
-		DateTime databasDate = new DateTime(maybeDatabaseDate);
+		DateTime databaseDate = new DateTime(maybeDatabaseDate);
 		
 		Object maybeSalesforceDate = salesforceAccount.get(LAST_MODIFIED_DATE);
 		Validate.isTrue(maybeSalesforceDate instanceof String, "LastModifiedDate of Salesforce account must be String");
 		DateTimeFormatter formatter = ISODateTimeFormat.dateTimeParser();
 		DateTime salesforceDate = formatter.parseDateTime((String) maybeSalesforceDate);
-		return databasDate.isAfter(salesforceDate);
+		return databaseDate.isAfter(salesforceDate);
 	}
 }

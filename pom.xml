@@ -17,6 +17,7 @@
 		<eclipsePluginVersion>2.8</eclipsePluginVersion>
 		<jdkName>JavaSE-1.6</jdkName>
 		<jdk.version>1.6</jdk.version>
+		<munit.version>3.5-M2</munit.version>
 		<junit.version>4.9</junit.version>
 	</properties>
 
@@ -521,6 +522,26 @@
 			<groupId>xerces</groupId>
 			<artifactId>xercesImpl</artifactId>
 			<version>2.9.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Munit -->
+		<dependency>
+			<groupId>org.mule.munit</groupId>
+			<artifactId>munit-runner</artifactId>
+			<version>${munit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.munit</groupId>
+			<artifactId>munit-assert</artifactId>
+			<version>${munit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>xalan</groupId>
+			<artifactId>xalan</artifactId>
+			<version>2.7.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
