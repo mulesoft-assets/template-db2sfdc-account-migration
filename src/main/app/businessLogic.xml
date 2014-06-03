@@ -28,7 +28,8 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
         <batch:threading-profile poolExhaustedAction="WAIT"/>
         <batch:input>
             <db:select config-ref="Database" doc:name="Database">
-                <db:parameterized-query><![CDATA[SELECT AccountNumber, Description, Id, Name, NumberOfEmployees, Phone, Type, LastModifiedDate FROM Account WHERE NumberOfEmployees > 5000 AND (Industry = 'Education' OR Industry = 'Government')]]></db:parameterized-query>
+                <db:parameterized-query><![CDATA[SELECT AccountNumber, Description, Name, NumberOfEmployees, Phone, Type, LastModifiedDate FROM Account WHERE NumberOfEmployees > 5000 AND (Industry = 'Education' OR Industry = 'Government')]]></db:parameterized-query>
+
 
 
             </db:select>
@@ -66,6 +67,7 @@ if (payload.get('NumberOfEmployees') == null) {
 					<sfdc:upsert config-ref="Salesforce"  type="Account" doc:name="upsert accounts in Salesforce" externalIdFieldName="Id">
                         <sfdc:objects ref="#[payload]"/>
 					</sfdc:upsert>
+                    <logger message="#[payload]" level="INFO" doc:name="log response"/>
                 </batch:commit>
             </batch:step>
         </batch:process-records>
