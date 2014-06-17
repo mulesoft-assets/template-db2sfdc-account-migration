@@ -131,8 +131,6 @@ public class BusinessLogicTest extends FunctionalTestCase {
 		
 		Map<String, Object> salesforceAccount3 = new HashMap<String, Object>();
 		salesforceAccount3.put(KEY_NAME, "Name_3_Salesforce" + uniqueSuffix);
-		salesforceAccount3.put(KEY_WEBSITE, "http://example.com");
-		salesforceAccount3.put(KEY_PHONE, "112");
 		List<Map<String, Object>> createdAccountInSalesforce = new ArrayList<Map<String, Object>>();
 		createdAccountInSalesforce.add(salesforceAccount3);
 	
@@ -148,8 +146,6 @@ public class BusinessLogicTest extends FunctionalTestCase {
 		Map<String, Object> databaseAccount0 = new HashMap<String, Object>();
 		databaseAccount0.put(KEY_NAME, "Name_0_Database" + uniqueSuffix);
 		databaseAccount0.put(KEY_ID, UUID.getUUID().toString());
-		databaseAccount0.put(KEY_WEBSITE, "http://acme.org");
-		databaseAccount0.put(KEY_PHONE, "123");
 		databaseAccount0.put(KEY_NUMBER_OF_EMPLOYEES, 6000);
 		databaseAccount0.put(KEY_INDUSTRY, "Education");
 		createdAccountsInDatabase.add(databaseAccount0);
@@ -158,8 +154,6 @@ public class BusinessLogicTest extends FunctionalTestCase {
 		Map<String, Object> databaseAccount1 = new HashMap<String, Object>();
 		databaseAccount1.put(KEY_NAME,  salesforceAccount3.get(KEY_NAME));
 		databaseAccount1.put(KEY_ID, UUID.getUUID().toString());
-		databaseAccount1.put(KEY_WEBSITE, "http://example.edu");
-		databaseAccount1.put(KEY_PHONE, "911");
 		databaseAccount1.put(KEY_NUMBER_OF_EMPLOYEES, 7100);
 		databaseAccount1.put(KEY_INDUSTRY, "Government");
 		createdAccountsInDatabase.add(databaseAccount1);
@@ -168,8 +162,6 @@ public class BusinessLogicTest extends FunctionalTestCase {
 		Map<String, Object> databaseAccount2 = new HashMap<String, Object>();
 		databaseAccount2.put(KEY_NAME, "Name_2_Database" + uniqueSuffix);
 		databaseAccount2.put(KEY_ID, UUID.getUUID().toString());
-		databaseAccount2.put(KEY_WEBSITE, "http://energy.edu");
-		databaseAccount2.put(KEY_PHONE, "333");
 		databaseAccount2.put(KEY_NUMBER_OF_EMPLOYEES, 13204);
 		databaseAccount2.put(KEY_INDUSTRY, "Energetic");
 		createdAccountsInDatabase.add(databaseAccount2);
