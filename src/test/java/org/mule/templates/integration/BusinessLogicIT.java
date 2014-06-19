@@ -1,3 +1,9 @@
+/**
+ * Mule Anypoint Template
+ * Copyright (c) MuleSoft, Inc.
+ * All rights reserved.  http://www.mulesoft.com
+ */
+
 package org.mule.templates.integration;
 
 import java.io.File;
@@ -41,7 +47,7 @@ import com.mulesoft.module.batch.BatchTestHelper;
  * @author damiansima
  * @author MartinZdila
  */
-public class BusinessLogicTest extends FunctionalTestCase {
+public class BusinessLogicIT extends FunctionalTestCase {
 
 	private static final String KEY_ID = "Id";
 	private static final String KEY_NAME = "Name";
