@@ -148,7 +148,7 @@ Of course more files will be found such as Test Classes and [Mule Application Fi
 Here is a list of the main XML files you'll find in this application:
 
 * [config.xml](#configxml)
-* [inboundEndpoints.xml](#inboundendpointsxml)
+* [endpoints.xml](#endpointsxml)
 * [businessLogic.xml](#businesslogicxml)
 * [errorHandling.xml](#errorhandlingxml)
 
