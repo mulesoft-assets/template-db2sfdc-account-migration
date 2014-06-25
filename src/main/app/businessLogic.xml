@@ -43,7 +43,7 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
             </batch:step>
             <batch:step name="selectNewerAccountStep" accept-expression="!(recordVars['accountInSalesforce'] is NullPayload)">
                 <choice doc:name="Choice">
-                    <when expression="#[org.mule.templates.util.AccountDateComparator.isAfter(payload, recordVars['accountInSalesforce'])]">
+                    <when expression="#[org.mule.templates.date.DateUtils.dateToDateTime(payload['LastModifiedDate']).isAfter(org.mule.templates.date.DateUtils.ISOStringDateToDateTime(recordVars['accountInSalesforce']['LastModifiedDate']))]">
                         <expression-component doc:name="define Id in SalesForce Instance"><![CDATA[payload['Id'] = recordVars['accountInSalesforce']['Id']]]></expression-component>
                     </when>
                     <otherwise>
