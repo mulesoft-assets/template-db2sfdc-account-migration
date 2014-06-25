@@ -11,7 +11,7 @@ CREATE TABLE `Account` (
   `Description` varchar(255) DEFAULT NULL,
   `Fax` varchar(255) DEFAULT NULL,
   `Industry` varchar(255) DEFAULT NULL,
-  `LastModifiedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `LastModifiedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Name` varchar(255) DEFAULT NULL,
   `NumberOfEmployees` int(11) DEFAULT NULL,
   `Ownership` varchar(255) DEFAULT NULL,
