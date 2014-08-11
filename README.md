@@ -4,6 +4,8 @@
 + [License Agreement](#licenseagreement)
 + [Use Case](#usecase)
 + [Considerations](#considerations)
+	* [DB Considerations](#dbconsiderations)
+	* [Salesforce Considerations](#salesforceconsiderations)
 + [Run it!](#runit)
 	* [Running on premise](#runonopremise)
 	* [Running on Studio](#runonstudio)
@@ -29,17 +31,56 @@ This Template should serve as a foundation for the process of migrating accounts
 As implemented, this Template leverage the [Batch Module](http://www.mulesoft.org/documentation/display/current/Batch+Processing).
 The batch job is divided in  Input, Process and On Complete stages.
 During the Input stage the Template will query from the Database all the existing Accounts that match the filter criteria.
-During the Process stage, each Account will be filtered depending on, if it has an existing matching account in the Salesforce and if the last updated date of the later is greater than the one from the Database.
 The last step of the Process stage will group the accounts and create them in Salesforce instance.
 Finally during the On Complete stage the Template will both output statistics data into the console and send a notification email with the results of the batch execution.
 
 # Considerations <a name="considerations"/>
 
-
 To make this Anypoint Template run, there are certain preconditions that must be considered. All of them deal with the preparations in both source (Database) and destination (Salesforce) systems, that must be made in order for all to run smoothly. 
 **Failling to do so could lead to unexpected behavior of the template.**
 
 This particular Anypoint Template illustrate the migration use case between Database and a Salesforce, thus it requires a Database instance to work.
+
+## DB Considerations <a name="dbconsiderations"/>
+
+There may be a few things that you need to know regarding DB, in order for this template to work.
+
+This Anypoint Template may be using date time/timestamp fields from the DB in order to do comparisons and take further actions.
+While the template handles the time zone by sending all such fields in a neutral time zone, it can not handle **time offsets**.
+We define as **time offsets** the time difference that may surface between date time/timestamp fields from different systems due to a differences in the system's internal clock.
+The user of this template should take this in consideration and take the actions needed to avoid the time offset.
+
+### As source of data
+
+There are no particular considerations for this Anypoint Template regarding DB as data origin.
+
+
+## Salesforce Considerations <a name="salesforceconsiderations"/>
+
+There may be a few things that you need to know regarding Salesforce, in order for this template to work.
+
+In order to have this template working as expected, you should be aware of your own Salesforce field configuration.
+
+###FAQ
+
+ - Where can I check that the field configuration for my Salesforce instance is the right one?
+
+    [Salesforce: Checking Field Accessibility for a Particular Field][1]
+
+- Can I modify the Field Access Settings? How?
+
+    [Salesforce: Modifying Field Access Settings][2]
+
+
+[1]: https://help.salesforce.com/HTViewHelpDoc?id=checking_field_accessibility_for_a_particular_field.htm&language=en_US
+[2]: https://help.salesforce.com/HTViewHelpDoc?id=modifying_field_access_settings.htm&language=en_US
+
+
+### As destination of data
+
+There are no particular considerations for this Anypoint Template regarding Siebel as data destination.
+
+
 
 # Run it! <a name="runit"/>
 Simple steps to get Database to Salesforce Account Migration running.

@@ -10,7 +10,6 @@ This Template should serve as a foundation for the process of migrating accounts
 As implemented, this Template leverage the [Batch Module](http://www.mulesoft.org/documentation/display/current/Batch+Processing).
 The batch job is divided in  Input, Process and On Complete stages.
 During the Input stage the Template will query from the Database all the existing Accounts that match the filter criteria.
-During the Process stage, each Account will be filtered depending on, if it has an existing matching account in the Salesforce and if the last updated date of the later is greater than the one from the Database.
 The last step of the Process stage will group the accounts and create them in Salesforce instance.
 Finally during the On Complete stage the Template will both output statistics data into the console and send a notification email with the results of the batch execution. 
 		</section>
