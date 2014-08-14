@@ -28,7 +28,7 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
         <batch:threading-profile poolExhaustedAction="WAIT"/>
         <batch:input>
             <db:select config-ref="Database" doc:name="Database">
-                <db:parameterized-query><![CDATA[SELECT AccountNumber, Description, Name, NumberOfEmployees, Phone, Type, LastModifiedDate FROM Account WHERE NumberOfEmployees > 5000 AND (Industry = 'Education' OR Industry = 'Government')]]></db:parameterized-query>
+                <db:parameterized-query><![CDATA[SELECT AccountNumber, Description, Name, NumberOfEmployees, Phone, Type, Industry, LastModifiedDate FROM Account WHERE NumberOfEmployees > 5000 AND (Industry = 'Education' OR Industry = 'Government')]]></db:parameterized-query>
 
 
 
