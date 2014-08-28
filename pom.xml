@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>template-db2sfdc-account-migration</artifactId>
 	<packaging>mule</packaging>
-	<version>1.0.1</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<name>db2sfdc-account-migration Mule Anypoint Template Project</name>
 
 	<scm>
