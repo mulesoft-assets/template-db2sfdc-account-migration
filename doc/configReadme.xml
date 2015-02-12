@@ -53,19 +53,23 @@ Once your app is all set and started, supposing you choose as domain name `db2sf
 		<section id="application_configuration">
 		<![CDATA[
 **Application configuration**
+
 + http.port `9090` 
 
 **Database Connector configuration**
+
 + db.jdbcUrl `jdbc:mysql://localhost:3306/mule?user=mule&password=mule`
 
 **SalesForce Connector configuration**
+
 + sfdc.username `joan.baez@org`
 + sfdc.password `JoanBaez456`
 + sfdc.securityToken `ces56arl7apQs56XTddf34X`
 + sfdc.url `https://login.salesforce.com/services/Soap/u/26.0`
 
 
-#### EMail Details
+**Email Details**
+
 + mail.from `batch.migrateaccounts.migration%40mulesoft.com`
 + mail.to `cesar.garcia@mulesoft.com`
 + mail.subject `Batch Job Finished Report`
@@ -87,13 +91,14 @@ For instance if 10 records are fetched from origin instance, then 12 api calls w
 		<section id="default_endpoints_xml">
 		<![CDATA[
 This is the file where you will found the inbound and outbound sides of your integration app.
-This Template has only an [HTTP Inbound Endpoint](http://www.mulesoft.org/documentation/display/current/HTTP+Endpoint+Reference) as the way to trigger the use case.
+This Template has only an [HTTP Listener Connector](http://www.mulesoft.org/documentation/display/current/HTTP+Listener+Connector) as the way to trigger the use case.
 
-**HTTP Inbound Endpoint** - Start Report Generation
+**HTTP Listener Connector** - Start Report Generation
+
 + `${http.port}` is set as a property to be defined either on a property file or in CloudHub environment variables.
 + The path configured by default is `migrateaccounts` and you are free to change for the one you prefer.
 + The host name for all endpoints in your CloudHub configuration should be defined as `localhost`. CloudHub will then route requests from your application domain URL to the endpoint.
-+ The endpoint is configured as a *request-response* since as a result of calling it the response will be the total of Accounts synced and filtered by the criteria specified.
++ The endpoint is a *request-response* since as a result of calling it the response will be the total of Accounts synced and filtered by the criteria specified.
 ]]>
 		</section>
 		<section id="default_business_logic_xml">
