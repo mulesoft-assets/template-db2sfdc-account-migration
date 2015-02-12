@@ -4,13 +4,17 @@
 	<parent>
 		<groupId>org.mule.templates</groupId>
 		<artifactId>templates-tooling-parent-pom</artifactId>
-		<version>1.0.2</version>
+		<version>1.0.7</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>template-db2sfdc-account-migration</artifactId>
 	<packaging>mule</packaging>
+<<<<<<< HEAD
 	<version>1.1.0-SNAPSHOT</version>
+=======
+	<version>1.0.5-SNAPSHOT</version>
+>>>>>>> origin/1.0.1
 	<name>db2sfdc-account-migration Mule Anypoint Template Project</name>
 
 	<scm>
