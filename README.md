@@ -83,6 +83,10 @@ There are no particular considerations for this Anypoint Template regarding Sale
 
 
 
+
+
+
+
 # Run it! <a name="runit"/>
 Simple steps to get Database to Salesforce Account Migration running.
 **Note:** This particular Anypoint Template illustrate the migration use case between Salesforce and a Database, thus it requires a Database instance to work.
