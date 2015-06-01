@@ -19,6 +19,8 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -47,8 +49,11 @@ import com.mulesoft.module.batch.BatchTestHelper;
  * @author damiansima
  * @author MartinZdila
  */
+@SuppressWarnings("deprecation")
 public class BusinessLogicIT extends FunctionalTestCase {
 
+	private static final Logger LOG = LogManager.getLogger(BusinessLogicIT.class);	
+	
 	private static final String KEY_ID = "Id";
 	private static final String KEY_NAME = "Name";
 	private static final String KEY_WEBSITE = "Website";
@@ -103,21 +108,21 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		helper.awaitJobTermination(TIMEOUT_SEC * 1000, 500);
 		helper.assertJobWasSuccessful();
 	
-		Map<String, Object> payload0 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInDatabase.get(0));
+		final Map<String, Object> payload0 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInDatabase.get(0));
 		Assert.assertNotNull("The account 0 should have been sync but is null", payload0);
 		Assert.assertEquals("The account 0 should have been sync (KEY_NAME)", createdAccountsInDatabase.get(0).get(KEY_NAME), payload0.get(KEY_NAME));
 
-		Map<String, Object>  payload1 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInDatabase.get(1));
+		final Map<String, Object>  payload1 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInDatabase.get(1));
 		Assert.assertNotNull("The account 1 should have been sync but is null", payload1);
 		Assert.assertEquals("The account 1 should have been sync (Website)", createdAccountsInDatabase.get(1).get(KEY_NAME), payload1.get(KEY_NAME));
 		
-		Map<String, Object>  payload2 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInDatabase.get(2));
+		final Map<String, Object>  payload2 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInDatabase.get(2));
 		Assert.assertNull("The account 2 should have not been sync", payload2);
 	}
 
 	@Override
 	protected String getConfigResources() {
-		Properties props = new Properties();
+		final Properties props = new Properties();
 		try {
 			props.load(new FileInputStream(MULE_DEPLOY_PROPERTIES_PATH));
 		} catch (IOException e) {
@@ -133,14 +138,14 @@ public class BusinessLogicIT extends FunctionalTestCase {
 	private void createTestDataInSandBox() throws MuleException, Exception {
 		// Create object in target system to be updated
 		
-		String uniqueSuffix = "_" + TEMPLATE_NAME + "_" + UUID.getUUID();
+		final String uniqueSuffix = "_" + TEMPLATE_NAME + "_" + UUID.getUUID();
 		
-		Map<String, Object> salesforceAccount3 = new HashMap<String, Object>();
+		final Map<String, Object> salesforceAccount3 = new HashMap<String, Object>();
 		salesforceAccount3.put(KEY_NAME, "Name_3_Salesforce" + uniqueSuffix);
-		List<Map<String, Object>> createdAccountInSalesforce = new ArrayList<Map<String, Object>>();
+		final List<Map<String, Object>> createdAccountInSalesforce = new ArrayList<Map<String, Object>>();
 		createdAccountInSalesforce.add(salesforceAccount3);
 	
-		SubflowInterceptingChainLifecycleWrapper createAccountInSalesforceFlow = getSubFlow("createAccountFlowSalesforce");
+		final SubflowInterceptingChainLifecycleWrapper createAccountInSalesforceFlow = getSubFlow("createAccountFlowSalesforce");
 		createAccountInSalesforceFlow.initialise();
 		createAccountInSalesforceFlow.process(getTestEvent(createdAccountInSalesforce, MessageExchangePattern.REQUEST_RESPONSE));
 	
@@ -149,7 +154,7 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		// Create accounts in source system to be or not to be synced
 	
 		// This account should be synced
-		Map<String, Object> databaseAccount0 = new HashMap<String, Object>();
+		final Map<String, Object> databaseAccount0 = new HashMap<String, Object>();
 		databaseAccount0.put(KEY_NAME, "Name_0_Database" + uniqueSuffix);
 		databaseAccount0.put(KEY_ID, UUID.getUUID().toString());
 		databaseAccount0.put(KEY_NUMBER_OF_EMPLOYEES, 6000);
@@ -157,7 +162,7 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		createdAccountsInDatabase.add(databaseAccount0);
 				
 		// This account should be synced (update)
-		Map<String, Object> databaseAccount1 = new HashMap<String, Object>();
+		final Map<String, Object> databaseAccount1 = new HashMap<String, Object>();
 		databaseAccount1.put(KEY_NAME,  salesforceAccount3.get(KEY_NAME));
 		databaseAccount1.put(KEY_ID, UUID.getUUID().toString());
 		databaseAccount1.put(KEY_NUMBER_OF_EMPLOYEES, 7100);
@@ -165,23 +170,23 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		createdAccountsInDatabase.add(databaseAccount1);
 
 		// This account should not be synced because of industry
-		Map<String, Object> databaseAccount2 = new HashMap<String, Object>();
+		final Map<String, Object> databaseAccount2 = new HashMap<String, Object>();
 		databaseAccount2.put(KEY_NAME, "Name_2_Database" + uniqueSuffix);
 		databaseAccount2.put(KEY_ID, UUID.getUUID().toString());
 		databaseAccount2.put(KEY_NUMBER_OF_EMPLOYEES, 13204);
 		databaseAccount2.put(KEY_INDUSTRY, "Energetic");
 		createdAccountsInDatabase.add(databaseAccount2);
 
-		SubflowInterceptingChainLifecycleWrapper createAccountInAFlow = getSubFlow("createAccountFlowDatabase");
+		final SubflowInterceptingChainLifecycleWrapper createAccountInAFlow = getSubFlow("createAccountFlowDatabase");
 		createAccountInAFlow.initialise();
 	
 		createAccountInAFlow.process(getTestEvent(createdAccountsInDatabase, MessageExchangePattern.REQUEST_RESPONSE));
 	
-		System.out.println("Results after adding: " + createdAccountsInDatabase.toString());
+		LOG.info("Results after adding: " + createdAccountsInDatabase.toString());
 	}
 
 	private String getTestFlows() {
-		File[] listOfFiles = new File(TEST_FLOWS_FOLDER_PATH).listFiles(new FileFilter() {
+		final File[] listOfFiles = new File(TEST_FLOWS_FOLDER_PATH).listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File f) {
 				return f.isFile() && f.getName().endsWith(".xml");
@@ -192,8 +197,8 @@ public class BusinessLogicIT extends FunctionalTestCase {
 			return "";
 		}
 		
-		StringBuilder resources = new StringBuilder();
-		for (File f : listOfFiles) {
+		final StringBuilder resources = new StringBuilder();
+		for (final File f : listOfFiles) {
 			resources.append(",").append(TEST_FLOWS_FOLDER_PATH).append(f.getName());
 		}
 		return resources.toString();
@@ -201,44 +206,48 @@ public class BusinessLogicIT extends FunctionalTestCase {
 
 	@Override
 	protected Properties getStartUpProperties() {
-		Properties properties = new Properties(super.getStartUpProperties());
-		properties.put(
-				MuleProperties.APP_HOME_DIRECTORY_PROPERTY,
-				new File(MAPPINGS_FOLDER_PATH).getAbsolutePath());
+		final Properties properties = new Properties(super.getStartUpProperties());
+		properties.put(MuleProperties.APP_HOME_DIRECTORY_PROPERTY, new File(MAPPINGS_FOLDER_PATH).getAbsolutePath());
+		
 		return properties;
 	}
 
 	@SuppressWarnings("unchecked")
 	protected Map<String, Object> invokeRetrieveFlow(SubflowInterceptingChainLifecycleWrapper flow, Map<String, Object> payload) throws Exception {
-		MuleEvent event = flow.process(getTestEvent(payload, MessageExchangePattern.REQUEST_RESPONSE));
-		Object resultPayload = event.getMessage().getPayload();
+		final MuleEvent event = flow.process(getTestEvent(payload, MessageExchangePattern.REQUEST_RESPONSE));
+		final Object resultPayload = event.getMessage().getPayload();
+		
 		return resultPayload instanceof NullPayload ? null : (Map<String, Object>) resultPayload;
 	}
 	
 	private void deleteTestAccountsFromDatabase() throws InitialisationException, MuleException, Exception {
-		SubflowInterceptingChainLifecycleWrapper deleteAccountFromAFlow = getSubFlow("deleteAccountFromDatabaseFlow");
+		final SubflowInterceptingChainLifecycleWrapper deleteAccountFromAFlow = getSubFlow("deleteAccountFromDatabaseFlow");
 		deleteAccountFromAFlow.initialise();
 		deleteTestEntityFromSandBox(deleteAccountFromAFlow, createdAccountsInDatabase);
 	}
 
 	private void deleteTestAccountsFromSalesforce() throws InitialisationException, MuleException, Exception {
-		List<Map<String, Object>> createdAccountsInSalesforce = new ArrayList<Map<String, Object>>();
-		for (Map<String, Object> c : createdAccountsInDatabase) {
-			Map<String, Object> account = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, c);
+		final List<Map<String, Object>> createdAccountsInSalesforce = new ArrayList<Map<String, Object>>();
+		
+		for (final Map<String, Object> c : createdAccountsInDatabase) {
+			final Map<String, Object> account = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, c);
 			if (account != null) {
 				createdAccountsInSalesforce.add(account);
 			}
 		}
-		SubflowInterceptingChainLifecycleWrapper deleteAccountFromBFlow = getSubFlow("deleteAccountFromSalesforceFlow");
+		
+		final SubflowInterceptingChainLifecycleWrapper deleteAccountFromBFlow = getSubFlow("deleteAccountFromSalesforceFlow");
 		deleteAccountFromBFlow.initialise();
 		deleteTestEntityFromSandBox(deleteAccountFromBFlow, createdAccountsInSalesforce);
 	}
 	
 	private void deleteTestEntityFromSandBox(SubflowInterceptingChainLifecycleWrapper deleteFlow, List<Map<String, Object>> entitities) throws MuleException, Exception {
-		List<String> idList = new ArrayList<String>();
-		for (Map<String, Object> c : entitities) {
+		final List<String> idList = new ArrayList<String>();
+		
+		for (final Map<String, Object> c : entitities) {
 			idList.add(c.get(KEY_ID).toString());
 		}
+		
 		deleteFlow.process(getTestEvent(idList, MessageExchangePattern.REQUEST_RESPONSE));
 	}
 
