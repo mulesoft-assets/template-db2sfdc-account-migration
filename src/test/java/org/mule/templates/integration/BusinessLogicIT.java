@@ -179,6 +179,7 @@ public class BusinessLogicIT extends FunctionalTestCase {
 
 		final SubflowInterceptingChainLifecycleWrapper createAccountInAFlow = getSubFlow("createAccountFlowDatabase");
 		createAccountInAFlow.initialise();
+		createAccountInAFlow.setMuleContext(muleContext);
 	
 		createAccountInAFlow.process(getTestEvent(createdAccountsInDatabase, MessageExchangePattern.REQUEST_RESPONSE));
 	
