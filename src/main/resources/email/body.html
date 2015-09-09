@@ -1,0 +1,50 @@
+<!--
+
+    Mule Anypoint Template
+    Copyright (c) MuleSoft, Inc.
+    All rights reserved.  http://www.mulesoft.com
+
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head/>
+<body>
+	<h3>Migration Report</h3>
+	
+	<table>
+		<tbody>
+			<tr>
+				<td><b>Batch ID:</b></td><td>#[message.payload.getBatchJobInstanceId()]</td>				
+			</tr>	
+			<tr>
+				<td><b>Time [milliseconds]:</b></td><td>#[message.payload.getElapsedTimeInMillis()]</td>
+			</tr>
+			<tr>
+				<td><b>Total Records: </b></td><td>#[message.payload.getTotalRecords()]</td>
+			</tr>
+			<tr>
+				<td><b>Successful Records:</b></td><td>#[message.payload.getSuccessfulRecords()]</td>
+			</tr>
+			<tr>
+				<td><b>Failed Records:</b></td><td>#[message.payload.getFailedRecords()]</td>
+			</tr>			
+			<tr>
+				<td><b>Loaded Records:</b></td><td>#[message.payload.getLoadedRecords()]</td>
+			</tr>
+			<tr>
+				<td><b>Processed Records:</b></td><td>#[message.payload.getProcessedRecords()]</td>
+			</tr>
+			<tr>
+				<td><b>Failed on Input Phase:</b></td><td>#[message.payload.isFailedOnInputPhase() ? "Yes" : "No"]</td>
+			</tr>
+			<tr>
+				<td><b>Failed on Loading Phase:</b></td><td>#[message.payload.isFailedOnLoadingPhase() ? "Yes" : "No"]</td>
+			</tr>
+			<tr>
+				<td><b>Execution started on:</b></td><td>#[new java.util.Date()]</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper"
-	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:core="http://www.mulesoft.org/schema/mule/core"
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:core="http://www.mulesoft.org/schema/mule/core"
 	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc"
 	xmlns:smtp="http://www.mulesoft.org/schema/mule/smtp" xmlns:json="http://www.mulesoft.org/schema/mule/json"
-	version="EE-3.6.2"
+	version="EE-3.7.1"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
@@ -13,8 +12,8 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
 http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
 http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smtp/current/mule-smtp.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
-http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd">
-    <data-mapper:config name="Account_To_Account" transformationGraphPath="account_to_account.grf" doc:name="Account_To_Account"/>
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
 
  <batch:job name="migrateAccountsBatch">
         <batch:threading-profile poolExhaustedAction="WAIT"/>
@@ -25,27 +24,25 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
         </batch:input> 
         <batch:process-records>
             <batch:step name="getAccountInSalesforceStep">
-                <enricher source="#[payload]" target="#[recordVars['accountInSalesforce']]" doc:name="store result in record var 'accountInSalesforce'">
-                    <sfdc:query-single config-ref="Salesforce" query="SELECT Id, Name FROM Account WHERE Name = '#[payload['Name']]'" doc:name="Query Account from Salesforce"/>
+                <enricher source="#[payload == null ? null : payload.Id]" target="#[payload.Id]" doc:name="store result in payload Id">
+                    <sfdc:query-single config-ref="Salesforce" query="SELECT Id FROM Account WHERE Name = '#[payload['Name']]'" doc:name="Query Account from Salesforce"/>
                 </enricher>
             </batch:step>
-            <batch:step name="createAccountsInSalesforceStep" >
-
-                <expression-component doc:name="Prepare to upsert"><![CDATA[// set Id
-payload['Id'] = recordVars['accountInSalesforce'] is NullPayload ? null : recordVars['accountInSalesforce']['Id'];
-
-// remove field LastModifiedDate
-payload.remove('LastModifiedDate');
-
-// changing type of field NumberOfEmployees to int
-if (payload.get('NumberOfEmployees') == null) {
-	payload.remove('NumberOfEmployees') 
-} else {
-	int intNumberOfEmployees = Integer.parseInt(payload.get('NumberOfEmployees'));
-	payload.put('NumberOfEmployees', intNumberOfEmployees);
-}]]></expression-component>
-                <data-mapper:transform config-ref="Account_To_Account" doc:name="Account To Account"/>
-                <batch:commit size="200" doc:name="Batch Commit">
+            <batch:step name="upsertAccountsInSalesforceStep" >
+                <batch:commit size="${page.size}" doc:name="Batch Commit">
+                    <dw:transform-message doc:name="Transform Message">
+                        <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload map
+{
+	Description: $.Description,
+	Id: $.Id,
+	Name: $.Name,
+	NumberOfEmployees: $.NumberOfEmployees as :number {class: "java.lang.Integer"} default 0,
+	Industry: $.Industry
+}]]></dw:set-payload>
+                    </dw:transform-message>
 					<sfdc:upsert config-ref="Salesforce"  type="Account" doc:name="Upsert accounts in Salesforce" externalIdFieldName="Id">
                         <sfdc:objects ref="#[payload]"/>
 					</sfdc:upsert>
@@ -60,7 +57,7 @@ if (payload.get('NumberOfEmployees') == null) {
             		<logger message="Migration process has finished: #[payload]" level="INFO" doc:name="Log 'Migration process has finished'"/>
                 </processor-chain>
 				<processor-chain>
-                	<json:object-to-json-transformer doc:name="Transform BatchJobInstance to JSON"/>
+                	<parse-template location="./src/main/resources/email/body.html" doc:name="Parse Template" />
 					<smtp:outbound-endpoint host="${smtp.host}" port="${smtp.port}" user="${smtp.user}" password="${smtp.password}" to="${mail.to}" from="${mail.from}" subject="${mail.subject}" responseTimeout="10000" connector-ref="gmailConnector" doc:name="Send mail"/>
 				</processor-chain>
             </scatter-gather>

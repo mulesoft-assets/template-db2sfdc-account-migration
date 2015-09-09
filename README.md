@@ -31,7 +31,8 @@ This Template should serve as a foundation for the process of migrating accounts
 As implemented, this Template leverage the [Batch Module](http://www.mulesoft.org/documentation/display/current/Batch+Processing).
 The batch job is divided in  Input, Process and On Complete stages.
 During the Input stage the Template will query from the Database all the existing Accounts that match the filter criteria.
-The last step of the Process stage will group the accounts and create them in Salesforce instance.
+Each database Account will be filtered depending if it has an existing matching Account in the Salesforce.
+The last step of the Process stage will group the accounts and upsert them in Salesforce instance based on the Name.
 Finally during the On Complete stage the Template will both output statistics data into the console and send a notification email with the results of the batch execution.
 
 # Considerations <a name="considerations"/>
@@ -106,7 +107,7 @@ In any of the ways you would like to run this Template this is an example of the
 <h1>Batch Process initiated</h1>
 <b>ID:</b>6eea3cc6-7c96-11e3-9a65-55f9f3ae584e<br/>
 <b>Records to Be Processed: </b>9<br/>
-<b>Start execution on: </b>Mon Jan 13 18:05:33 GMT-03:00 2014
+<b>Start execution on: </b>Wed Sep 09 10:05:33 GMT-03:00 2015
 </pre>
 
 ## Running on premise <a name="runonopremise"/>
@@ -143,7 +144,7 @@ Once you have imported you Anypoint Template into Anypoint Studio you need to fo
 
 ### Running on Mule ESB stand alone <a name="runonmuleesbstandalone"/>
 Complete all properties in one of the property files, for example in [mule.prod.properties] (../master/src/main/resources/mule.prod.properties) and run your app with the corresponding environment variable to use it. To follow the example, this will be `mule.env=prod`. 
-
+After this, to trigger the use case you just need to hit the local HTTP connector with the port you configured in your file. If this is, for instance, `9090` then you should hit: `http://localhost:9090/migrateaccounts` and this will output a summary report and send it in the e-mail.
 
 ## Running on CloudHub <a name="runoncloudhub"/>
 While [creating your application on CloudHub](http://www.mulesoft.org/documentation/display/current/Hello+World+on+CloudHub) (Or you can do it later as a next step), you need to go to Deployment > Advanced to set all environment variables detailed in **Properties to be configured** as well as the **mule.env**.
@@ -158,7 +159,8 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 ### Application configuration
 **Application configuration**
 
-+ http.port `9090` 
++ http.port `9090`
++ page.size `200`
 
 **Database Connector configuration**
 
@@ -169,8 +171,14 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 + sfdc.username `joan.baez@org`
 + sfdc.password `JoanBaez456`
 + sfdc.securityToken `ces56arl7apQs56XTddf34X`
-+ sfdc.url `https://login.salesforce.com/services/Soap/u/26.0`
++ sfdc.url `https://login.salesforce.com/services/Soap/u/32.0`
 
+**SMTP Services configuration**
+
++ smtp.host `smtp.gmail.com`
++ smtp.port `587`
++ smtp.user `email%40example.com`
++ smtp.password `password` 
 
 **Email Details**
 

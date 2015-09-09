@@ -52,7 +52,7 @@ import com.mulesoft.module.batch.BatchTestHelper;
 @SuppressWarnings("deprecation")
 public class BusinessLogicIT extends FunctionalTestCase {
 
-	private static final Logger LOG = LogManager.getLogger(BusinessLogicIT.class);	
+	private static final Logger LOGGER = LogManager.getLogger(BusinessLogicIT.class);	
 	
 	private static final String KEY_ID = "Id";
 	private static final String KEY_NAME = "Name";
@@ -183,7 +183,7 @@ public class BusinessLogicIT extends FunctionalTestCase {
 	
 		createAccountInAFlow.process(getTestEvent(createdAccountsInDatabase, MessageExchangePattern.REQUEST_RESPONSE));
 	
-		LOG.info("Results after adding: " + createdAccountsInDatabase.toString());
+		LOGGER.info("Results after adding: " + createdAccountsInDatabase.toString());
 	}
 
 	private String getTestFlows() {
@@ -219,12 +219,6 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		final Object resultPayload = event.getMessage().getPayload();
 		
 		return resultPayload instanceof NullPayload ? null : (Map<String, Object>) resultPayload;
-	}
-	
-	private void deleteTestAccountsFromDatabase() throws InitialisationException, MuleException, Exception {
-		final SubflowInterceptingChainLifecycleWrapper deleteAccountFromAFlow = getSubFlow("deleteAccountFromDatabaseFlow");
-		deleteAccountFromAFlow.initialise();
-		deleteTestEntityFromSandBox(deleteAccountFromAFlow, createdAccountsInDatabase);
 	}
 
 	private void deleteTestAccountsFromSalesforce() throws InitialisationException, MuleException, Exception {
