@@ -36,6 +36,7 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
 ---
 payload map
 {
+	AccountNumber: $.AccountNumber,
 	Description: $.Description,
 	Id: $.Id,
 	Name: $.Name,
