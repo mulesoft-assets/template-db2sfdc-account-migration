@@ -17,11 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -56,8 +55,6 @@ public class BusinessLogicIT extends FunctionalTestCase {
 	
 	private static final String KEY_ID = "Id";
 	private static final String KEY_NAME = "Name";
-	private static final String KEY_WEBSITE = "Website";
-	private static final String KEY_PHONE = "Phone";
 	private static final String KEY_NUMBER_OF_EMPLOYEES = "NumberOfEmployees";
 	private static final String KEY_INDUSTRY = "Industry";
 	
@@ -110,11 +107,14 @@ public class BusinessLogicIT extends FunctionalTestCase {
 	
 		final Map<String, Object> payload0 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInDatabase.get(0));
 		Assert.assertNotNull("The account 0 should have been sync but is null", payload0);
-		Assert.assertEquals("The account 0 should have been sync (KEY_NAME)", createdAccountsInDatabase.get(0).get(KEY_NAME), payload0.get(KEY_NAME));
+		Assert.assertEquals("The account 0 should have been sync (" + KEY_NAME + ")", createdAccountsInDatabase.get(0).get(KEY_NAME), payload0.get(KEY_NAME));
+		Assert.assertEquals("The account 0 should have been sync (" + KEY_INDUSTRY + ")", createdAccountsInDatabase.get(0).get(KEY_INDUSTRY), payload0.get(KEY_INDUSTRY));
 
 		final Map<String, Object>  payload1 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInDatabase.get(1));
 		Assert.assertNotNull("The account 1 should have been sync but is null", payload1);
-		Assert.assertEquals("The account 1 should have been sync (Website)", createdAccountsInDatabase.get(1).get(KEY_NAME), payload1.get(KEY_NAME));
+		Assert.assertEquals("The account 1 should have been sync (" + KEY_NAME + ")", createdAccountsInDatabase.get(1).get(KEY_NAME), payload1.get(KEY_NAME));
+		Assert.assertEquals("The account 1 should have been sync (" + KEY_INDUSTRY + ")", createdAccountsInDatabase.get(1).get(KEY_INDUSTRY), payload1.get(KEY_INDUSTRY));
+		
 		
 		final Map<String, Object>  payload2 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInDatabase.get(2));
 		Assert.assertNull("The account 2 should have not been sync", payload2);
