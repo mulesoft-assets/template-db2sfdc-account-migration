@@ -30,7 +30,7 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
             </batch:step>
             <batch:step name="upsertAccountsInSalesforceStep" >
                 <batch:commit size="${page.size}" doc:name="Batch Commit">
-                    <dw:transform-message doc:name="Transform Message">
+                    <dw:transform-message doc:name="DB account to SFDC account">
                         <dw:set-payload><![CDATA[%dw 1.0
 %output application/java
 ---
