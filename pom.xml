@@ -10,14 +10,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>template-db2sfdc-account-migration</artifactId>
 	<packaging>mule</packaging>
-	<version>1.2.0</version>
+	<version>1.2.1-SNAPSHOT</version>
 	<name>db2sfdc-account-migration Mule Anypoint Template Project</name>
 
 	<scm>
 		<connection>scm:git:https://github.com/mulesoft/template-db2sfdc-account-migration.git</connection>
 		<developerConnection>scm:git:https://github.com/mulesoft/template-db2sfdc-account-migration.git</developerConnection>
 		<url>https://github.com/mulesoft/template-db2sfdc-account-migration</url>
-	  <tag>v1.2.0</tag>
+	  <tag>HEAD</tag>
   </scm>
 
 	<build>
