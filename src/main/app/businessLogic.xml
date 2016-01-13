@@ -4,7 +4,7 @@
 	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc"
 	xmlns:smtp="http://www.mulesoft.org/schema/mule/smtp" xmlns:json="http://www.mulesoft.org/schema/mule/json"
-	version="EE-3.7.2"
+	
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
@@ -58,7 +58,7 @@ payload map
             		<logger message="Migration process has finished: #[payload]" level="INFO" doc:name="Log 'Migration process has finished'"/>
                 </processor-chain>
 				<processor-chain>
-                	<parse-template location="./src/main/resources/email/body.html" doc:name="Parse Template" />
+                	<parse-template location="email/body.html" doc:name="Parse Template" />
 					<smtp:outbound-endpoint host="${smtp.host}" port="${smtp.port}" user="${smtp.user}" password="${smtp.password}" to="${mail.to}" from="${mail.from}" subject="${mail.subject}" responseTimeout="10000" connector-ref="gmailConnector" doc:name="Send mail"/>
 				</processor-chain>
             </scatter-gather>
