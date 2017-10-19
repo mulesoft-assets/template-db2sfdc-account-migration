@@ -1,0 +1,19 @@
+{
+  "domain": "default",
+  "configs": [
+    "template-db2sfdc-account-migration.xml"
+  ],
+  "redeploymentEnabled": true,
+  "name": "template-db2sfdc-account-migration",
+  "minMuleVersion": "4.0.0-rc",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedResources": []
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}
