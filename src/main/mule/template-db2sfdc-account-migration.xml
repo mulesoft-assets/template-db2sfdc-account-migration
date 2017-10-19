@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd 
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="910654bf-9fd9-4073-bad4-cf951b7f0022" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	
+	<db:config name="Database_Config" doc:name="Database Config"
+		doc:id="6e89dec2-95e1-4ee2-a6c1-d722c45f3d20">
+		<db:my-sql-connection
+			host="${db.host}"
+			port="${db.port}" user="${db.user}" password="${db.password}"
+			database="${db.name}" />
+	</db:config>
+
+	<email:smtp-config name="Gmail_SMTP" doc:name="Email SMTP"
+		doc:id="8ba14ccd-a5b8-43a8-8281-cd433c852f2b">
+		<email:smtps-connection host="${smtp.host}"
+			port="${smtp.port}" user="${smtp.user}" password="${smtp.password}"
+			tlsContext="TLS_Context" />
+	</email:smtp-config>
+	<tls:context name="TLS_Context" doc:name="TLS Context"
+		doc:id="233e532c-8296-4ddd-ac67-e2b7984b3609">
+		<tls:trust-store insecure="true" />
+	</tls:context>
+	<salesforce:sfdc-config name="Salesforce_Sfdc_config"
+		doc:name="Salesforce Sfdc config" doc:id="0fd2a257-c65d-444d-bdc5-d66b5479a967">
+		<salesforce:basic-connection username="${sfdc.username}"
+			password="${sfdc.password}" securityToken="${sfdc.securityToken}" />
+	</salesforce:sfdc-config>
+	<configuration-properties file="mule-artifact.properties" doc:name="Configuration properties" doc:id="46877740-aac5-4812-8728-4718689aa9ec" />
+	<configuration-properties file="common.properties" doc:name="Configuration properties" doc:id="dffa4da7-cc5c-4ecb-922e-1115b4387354" />
+	<configuration-properties file="mule.${mule.env}.properties" doc:name="Configuration properties" doc:id="674beef8-9485-40a7-99b9-0685c9b7e863" />
+	
+	<flow name="template-db2sfdc-account-migrationFlow" doc:id="884f86c5-66e1-4701-bb9b-594c2a60abf3" >
+		<http:listener config-ref="HTTP_Listener_config" path="/migrate" doc:name="/migrate" doc:id="1a64d758-b02b-4675-b66a-f7c9f4fcab6b" />
+		<db:select config-ref="Database_Config" doc:name="Select accounts from DB" doc:id="2d2d30b8-b220-4e0b-84a8-f10d02ac13e8" >
+			<db:sql >SELECT Description, Name, NumberOfEmployees, Industry FROM Account WHERE NumberOfEmployees &gt; 5000 AND (Industry = 'Education' OR Industry = 'Government')</db:sql>
+		</db:select>
+		<batch:job jobName="template-db2sfdc-account-migrationBatch_Job" doc:id="79b373e6-1aeb-43a9-9dfe-8ac0d2f31fdc" >
+			<batch:process-records >
+				<batch:step name="queryAccountStep" doc:id="232087de-e311-49c1-a890-439c65ea1af2" >
+					<salesforce:query-single config-ref="Salesforce_Sfdc_config" doc:name="Query account in Salesforce" doc:id="573f94bc-79b9-4219-b6bd-65200b61b7a2" target="IdInSF">
+						<salesforce:salesforce-query >SELECT Id FROM Account WHERE Name = ':name'</salesforce:salesforce-query>
+						<salesforce:parameters ><![CDATA[#[output applicaton/java
+---
+{
+	"name" : payload.Name
+}]]]></salesforce:parameters>
+					</salesforce:query-single>
+					<ee:transform doc:name="Push Id to payload" doc:id="5e6ecafa-54e0-4014-a786-899ba03a102f" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload ++ vars.IdInSF]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</batch:step>
+				<batch:step name="upsertDataStep" doc:id="78a74ab4-9b91-416d-985a-acda2ac377eb">
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="1ad86a98-643e-494a-a90a-32daab0b03cc" size="${page.size}">
+						<ee:transform doc:name="Map database fields to Salesforce fields" doc:id="d484063f-6d81-42ce-98ef-7cec51b04672" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload map {
+	Id: $.Id,
+	Description: $.Description,
+	Name: $.Name,
+	Industry: $.Industry,
+	NumberOfEmployees: $.NumberOfEmployees
+}]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+						<salesforce:upsert-bulk config-ref="Salesforce_Sfdc_config" type="Account" externalIdFieldName="Id" doc:name="Upsert bulk - Accounts in Salesforce" doc:id="26dee78b-3cbd-41d7-a260-538058420b0e" />
+					</batch:aggregator>
+				</batch:step>
+			</batch:process-records>
+			<batch:on-complete >
+								<scatter-gather doc:name="Scatter-Gather" doc:id="ef2964ef-0b85-4c6c-a5ee-b834df639e7b">
+			<route>
+				<logger level="INFO" doc:name="Migration process has finished!" doc:id="b7575d38-7dbd-4602-9186-1bbb25234896" message="Migration process has finished!" />
+			</route>
+					<route>
+ 						<ee:transform doc:name="Prepare migration result email"
+ 							doc:id="c84b4bc4-5a65-41c1-9d0c-f1ebd3d8db7a">
+ 							<ee:message>
+ 								<ee:set-payload><![CDATA[%dw 2.0
+ output text/plain
+ ---
+ "Migration Report: \n"
+  
+ ++ "\n Time [milliseconds]: " 		++ payload.elapsedTimeInMillis
+ ++ "\n Total Records: "				++ payload.totalRecords
+ ++ "\n Successful Records: "		++ payload.successfulRecords
+ ++ "\n Failed Records: "			++ payload.failedRecords
+ ++ "\n Loaded Records: "			++ payload.loadedRecords
+ ++ "\n Processed Records: " 		++ payload.processedRecords]]></ee:set-payload>
+ 							</ee:message>
+ 						</ee:transform>
+ 						<email:send config-ref="Gmail_SMTP" doc:name="Send migration result email"
+ 							doc:id="5896eaa9-dd10-47a2-a6fc-6319b11dbd06" fromAddress="${mail.from}"
+ 							subject="Accounts has been migrated">
+ 							<email:to-addresses>
+ 								<email:to-address value="${mail.to}" />
+ 							</email:to-addresses>
+ 						</email:send>
+ 					</route>
+		</scatter-gather>
+			</batch:on-complete>
+		</batch:job>
+		<logger level="INFO" doc:name="Log - Migration process has started!" doc:id="673c18b0-db38-44f6-95ef-69edd1e75ed6" message="Migration process has started!"/>
+		<ee:transform doc:name="Build response" doc:id="2abddd58-c707-435a-a004-ec5ba9107429" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "Migration process has started!"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
