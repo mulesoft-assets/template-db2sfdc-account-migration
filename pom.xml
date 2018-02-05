@@ -13,10 +13,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<app.runtime>4.0.0-rc</app.runtime>
-		<mule.maven.plugin.version>3.0.0-rc</mule.maven.plugin.version>
-		<mule.connectors.version>0.9.0</mule.connectors.version>
-		<mule.sfdc.connector.version>9.0.0-rc</mule.sfdc.connector.version>
+		<app.runtime>4.0.0</app.runtime>
+		<mule.maven.plugin.version>3.0.0</mule.maven.plugin.version>
+		<mule.connectors.version>1.0.0</mule.connectors.version>
+		<mule.sfdc.connector.version>9.0.0</mule.sfdc.connector.version>
 		<mysql.version>5.1.26</mysql.version>
 	</properties>
 
