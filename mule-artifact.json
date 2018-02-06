@@ -1,11 +1,14 @@
 {
-  "domain": "default",
   "configs": [
-    "template-db2sfdc-account-migration.xml"
+    "businessLogic.xml",
+    "config.xml",
+    "endpoints.xml",
+    "errorHandling.xml"
   ],
   "redeploymentEnabled": true,
   "name": "template-db2sfdc-account-migration",
-  "minMuleVersion": "4.0.0-rc",
+  "minMuleVersion": "4.0.0",
+  "requiredProduct": "MULE_EE",
   "classLoaderModelLoaderDescriptor": {
     "id": "mule",
     "attributes": {
