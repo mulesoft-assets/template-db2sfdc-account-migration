@@ -104,12 +104,12 @@ This template is customized for MySQL. To use it with different SQL implementati
 
 In any of the ways you would like to run this Template this is an example of the output you'll see after hitting the HTTP endpoint:
 
-<pre>
-<h1>Batch Process initiated</h1>
-<b>ID:</b>6eea3cc6-7c96-11e3-9a65-55f9f3ae584e<br/>
-<b>Records to Be Processed: </b>9<br/>
-<b>Start execution on: </b>Wed Jan 09 10:05:33 GMT-03:00 2018
-</pre>
+	{
+	  "Message": "Batch Process initiated",
+	  "ID": "7fc674b0-e4b7-11e7-9627-100ba905a441",
+	  "RecordCount": 32,
+	  "StartExecutionOn": "2017-12-19T13:24:03Z"
+	}
 
 ## Running on premise <a name="runonopremise"/>
 In this section we detail the way you should run your Anypoint Template on your computer.
