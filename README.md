@@ -237,7 +237,7 @@ This Template has only an [HTTP Listener Connector](http://www.mulesoft.org/docu
 + `${http.port}` is set as a property to be defined either on a property file or in CloudHub environment variables.
 + The path configured by default is `migrateaccounts` and you are free to change for the one you prefer.
 + The host name for all endpoints in your CloudHub configuration should be defined as `localhost`. CloudHub will then route requests from your application domain URL to the endpoint.
-+ The endpoint is a *request-response* since as a result of calling it the response will be the total of Accounts synced and filtered by the criteria specified.
++ The endpoint is a *request-response* and a result of calling it is the response with the total records fetched by the criteria specified.
 
 
 
