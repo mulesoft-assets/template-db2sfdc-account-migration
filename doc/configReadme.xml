@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<configuration>
+	<placeholders>
+		<placeholder id="template_name">Database to Salesforce Account Migration</placeholder>
+	</placeholders>
+	<sections>
+		<section id="use_case">
+This Template should serve as a foundation for the process of migrating accounts from Database to Salesforce instance, being able to specify filtering criteria and desired behavior when an account already exists in the destination instance. 
+
+As implemented, this Template leverages the [Batch Module](http://www.mulesoft.org/documentation/display/current/Batch+Processing).
+The batch job is divided in  Input, Process and On Complete stages.
+During the Input stage the Template will query from the Database all the existing Accounts that match the filter criteria.
+Each database Account will be filtered depending if it has an existing matching Account in the Salesforce.
+The last step of the Process stage will group the accounts and upsert them in Salesforce instance based on the Name.
+Finally during the On Complete stage the Template will both output statistics data into the console and send a notification email with the results of the batch execution. 
+		</section>
+		<section id="considerations">
+<![CDATA[
+To make this Anypoint Template run, there are certain preconditions that must be considered. All of them deal with the preparations in both source (Database) and destination (Salesforce) systems, that must be made in order for all to run smoothly. 
+**Failling to do so could lead to unexpected behavior of the template.**
+
+This particular Anypoint Template illustrates the migration use case between Database and a Salesforce, thus it requires a Database instance to work.
+]]>
+		</section>
+		<section id="run_it">
+<![CDATA[
+
+**Note:** This particular Anypoint Template illustrates the migration use case between Salesforce and a Database, thus it requires a Database instance to work.
+The Anypoint Template comes packaged with a SQL script to create the database table that uses. 
+It is the user responsibility to use that script to create the table in an available schema and change the configuration accordingly. The SQL script file can be found in [src/main/resources/account.sql](../master/src/main/resources/account.sql).
+
+This template is customized for MySQL. To use it with different SQL implementation, some changes are necessary:
+
+* update SQL script dialect to desired one
+* replace MySQL driver library (or add another) dependency to desired one in [POM](pom.xml)
+* update Database Config to suitable connection instead of `db:my-sql-connection` in global elements (config.xml)
+* update connection configurations in `mule.*.properties` file
+
+In any of the ways you would like to run this Template this is an example of the output you'll see after hitting the HTTP endpoint:
+
+	{
+	  "Message": "Batch Process initiated",
+	  "ID": "7fc674b0-e4b7-11e7-9627-100ba905a441",
+	  "RecordCount": 32,
+	  "StartExecutionOn": "2017-12-19T13:24:03Z"
+	}
+]]>
+		</section>
+		<section id="running_on_standalone">
+<![CDATA[
+After this, to trigger the use case you just need to hit the local HTTP connector with the port you configured in your file. If this is, for instance, `9090` then you should hit: `http://localhost:9090/migrateaccounts` and this will output a summary report and send it in the e-mail.
+]]>
+		</section>
+		<section id="running_on_cloudhub">
+<![CDATA[
+
+Once your app is all set and started, supposing you choose as domain name `db2sfdcaccountmigration` to trigger the use case you just need to hit `http://db2sfdcaccountmigration.cloudhub.io/migrateaccounts` and report will be sent to the e-mails configured.]]>
+		</section>
+		<section id="application_configuration">
+		<![CDATA[
+**Application configuration**
+
++ http.port `9090`
++ page.size `200`
+
+**Database Connector configuration**
+
++ db.host `localhost`
++ db.port `3306`
++ db.user `user-nameA`
++ db.password `user-passwordA`
++ db.databasename `dbnameA`
+
+**SalesForce Connector configuration**
+
++ sfdc.username `joan.baez@org`
++ sfdc.password `JoanBaez456`
++ sfdc.securityToken `ces56arl7apQs56XTddf34X`
+
+**SMTP Services configuration**
+
++ smtp.host `smtp.gmail.com`
++ smtp.port `587`
++ smtp.user `email%40example.com`
++ smtp.password `password` 
+
+**Email Details**
+
++ mail.from `batch.migrateaccounts.migration%40mulesoft.com`
++ mail.to `cesar.garcia@mulesoft.com`
++ mail.subject `Batch Job Finished Report`
+]]>
+		</section>
+		<section id="api_calls">
+		<![CDATA[
+Salesforce imposes limits on the number of API Calls that can be made. Therefore calculating this amount may be an important factor to consider. Account Migration Template calls to the API can be calculated using the formula:
+
+***1 + X / 200***
+
+Being ***X*** the number of Accounts to be synchronized on each run. 
+
+The division by ***200*** is because, by default, Accounts are gathered in groups of 200 for each Upsert API Call in the commit step. Also consider that this calls are executed repeatedly every polling cycle.	
+
+For instance if 10 records are fetched from origin instance, then 11 api calls will be made (1 + 10).
+]]>
+		</section>
+		<section id="default_endpoints_xml">
+		<![CDATA[
+This is the file where you will found the inbound and outbound sides of your integration app.
+This Template has only an [HTTP Listener Connector](http://www.mulesoft.org/documentation/display/current/HTTP+Listener+Connector) as the way to trigger the use case.
+
+**HTTP Listener Connector** - Start Report Generation
+
++ `${http.port}` is set as a property to be defined either on a property file or in CloudHub environment variables.
++ The path configured by default is `migrateaccounts` and you are free to change for the one you prefer.
++ The host name for all endpoints in your CloudHub configuration should be defined as `localhost`. CloudHub will then route requests from your application domain URL to the endpoint.
++ The endpoint is a *request-response* and a result of calling it is the response with the total records fetched by the criteria specified.
+]]>
+		</section>
+		<section id="default_business_logic_xml">
+		<![CDATA[
+Functional aspect of the Template is implemented on this XML, directed by one flow responsible of excecuting the logic.
+For the pourpose of this particular Template the *mainFlow* just excecutes a [Batch Job](http://www.mulesoft.org/documentation/display/current/Batch+Processing). which handles all the logic of it.
+This flow has Exception Strategy that basically consists on invoking the *defaultChoiseExceptionStrategy* defined in *errorHandling.xml* file.
+]]>
+		</section>
+	</sections>
+</configuration>
