@@ -5,9 +5,10 @@
     "endpoints.xml",
     "errorHandling.xml"
   ],
+  "secureProperties": [],
   "redeploymentEnabled": true,
   "name": "template-db2sfdc-account-migration",
-  "minMuleVersion": "4.0.0",
+  "minMuleVersion": "4.1.0",
   "requiredProduct": "MULE_EE",
   "classLoaderModelLoaderDescriptor": {
     "id": "mule",
