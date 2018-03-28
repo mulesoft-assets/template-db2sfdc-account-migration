@@ -16,7 +16,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
 	<munit:config name="test-suite.xml" doc:name="MUnit configuration" />
 	<configuration-properties doc:name="Configuration properties"
-		doc:id="c382dc50-b83c-41be-ad31-42ccb929d758" file="mule.dev.properties" />
+		doc:id="c382dc50-b83c-41be-ad31-42ccb929d758" file="mule.${mule.env}.properties" />
 	<configuration-properties doc:name="Configuration properties"
 		doc:id="59fef852-f885-4b1e-baac-96bce830be9f" file="mule-artifact.properties" />
 	<configuration-properties doc:name="Configuration properties"
