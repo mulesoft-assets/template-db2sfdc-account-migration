@@ -29,16 +29,16 @@ Please review the terms of the license before downloading and using this templat
 This Template should serve as a foundation for the process of migrating accounts from Database to Salesforce instance, being able to specify filtering criteria and desired behavior when an account already exists in the destination instance. 
 
 As implemented, this Template leverages the [Batch Module](http://www.mulesoft.org/documentation/display/current/Batch+Processing).
-The batch job is divided in  Input, Process and On Complete stages.
-During the Input stage the Template will query from the Database all the existing Accounts that match the filter criteria.
+The batch job is divided in *Process* and *On Complete* stages.
+Migration process starts from fetching all the existing Accounts that match the filter criteria from Database.
 Each database Account will be filtered depending if it has an existing matching Account in the Salesforce.
-The last step of the Process stage will group the accounts and upsert them in Salesforce instance based on the Name.
-Finally during the On Complete stage the Template will both output statistics data into the console and send a notification email with the results of the batch execution.
+The last step of the *Process* stage will group the accounts and upsert them in Salesforce instance based on the Name.
+Finally during the *On Complete* stage the Template will both output statistics data into the console and send a notification email with the results of the batch execution.
 
 # Considerations <a name="considerations"/>
 
 To make this Anypoint Template run, there are certain preconditions that must be considered. All of them deal with the preparations in both source (Database) and destination (Salesforce) systems, that must be made in order for all to run smoothly. 
-**Failling to do so could lead to unexpected behavior of the template.**
+**Failing to do so could lead to unexpected behavior of the template.**
 
 This particular Anypoint Template illustrates the migration use case between Database and a Salesforce, thus it requires a Database instance to work.
 
@@ -102,15 +102,6 @@ This template is customized for MySQL. To use it with different SQL implementati
 * update Database Config to suitable connection instead of `db:my-sql-connection` in global elements (config.xml)
 * update connection configurations in `mule.*.properties` file
 
-In any of the ways you would like to run this Template this is an example of the output you'll see after hitting the HTTP endpoint:
-
-	{
-	  "Message": "Batch Process initiated",
-	  "ID": "7fc674b0-e4b7-11e7-9627-100ba905a441",
-	  "RecordCount": 32,
-	  "StartExecutionOn": "2017-12-19T13:24:03Z"
-	}
-
 ## Running on premise <a name="runonopremise"/>
 In this section we detail the way you should run your Anypoint Template on your computer.
 
@@ -125,10 +116,8 @@ First thing to know if you are a newcomer to Mule is where to get the tools.
 ### Importing an Anypoint Template into Studio
 Mule Studio offers several ways to import a project into the workspace, for instance: 
 
-+ Anypoint Studio generated Deployable Archive (.zip)
-+ Anypoint Studio Project from External Location
-+ Maven-based Mule Project from pom.xml
-+ Mule ESB Configuration XML from External Location
++ Anypoint Studio Project from File System
++ Packaged mule application (.jar)
 
 You can find a detailed description on how to do so in this [Documentation Page](http://www.mulesoft.org/documentation/display/current/Importing+and+Exporting+in+Studio).
 
@@ -158,10 +147,11 @@ Mule Studio provides you with really easy way to deploy your Template directly t
 ## Properties to be configured (With examples) <a name="propertiestobeconfigured"/>
 In order to use this Mule Anypoint Template you need to configure properties (Credentials, configurations, etc.) either in properties file or in CloudHub as Environment Variables. Detail list with examples:
 ### Application configuration
-**Application configuration**
-
+**HTTP Connector configuration**
 + http.port `9090`
-+ page.size `200`
+
+**Batch Aggregator configuration**
++ page.size `1000`
 
 **Database Connector configuration**
 
@@ -187,17 +177,17 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 **Email Details**
 
 + mail.from `batch.migrateaccounts.migration%40mulesoft.com`
-+ mail.to `cesar.garcia@mulesoft.com`
++ mail.to `your.email@gmail.com`
 + mail.subject `Batch Job Finished Report`
 
 # API Calls <a name="apicalls"/>
 Salesforce imposes limits on the number of API Calls that can be made. Therefore calculating this amount may be an important factor to consider. Account Migration Template calls to the API can be calculated using the formula:
 
-***1 + X / 200***
+***1 + X / ${page.size}***
 
 Being ***X*** the number of Accounts to be synchronized on each run. 
 
-The division by ***200*** is because, by default, Accounts are gathered in groups of 200 for each Upsert API Call in the commit step. Also consider that this calls are executed repeatedly every polling cycle.	
+The division by ***${page.size}*** is because, by default, Accounts are gathered in groups of ${page.size} for each Upsert API Call in the commit step. Also consider that this calls are executed repeatedly every polling cycle.	
 
 For instance if 10 records are fetched from origin instance, then 11 api calls will be made (1 + 10).
 
