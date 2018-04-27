@@ -8,7 +8,7 @@
   "secureProperties": [],
   "redeploymentEnabled": true,
   "name": "template-db2sfdc-account-migration",
-  "minMuleVersion": "4.1.0",
+  "minMuleVersion": "4.1.1",
   "requiredProduct": "MULE_EE",
   "classLoaderModelLoaderDescriptor": {
     "id": "mule",
