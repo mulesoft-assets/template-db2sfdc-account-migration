@@ -1,51 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
-	xmlns:os="http://www.mulesoft.org/schema/mule/os"
-	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
-	xmlns:email="http://www.mulesoft.org/schema/mule/email"
-	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http" 
-	xmlns="http://www.mulesoft.org/schema/mule/core" 
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="
-http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
-http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd 
-http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd 
-http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
-http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+<?xml version='1.0' encoding='utf-8'?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd  http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd  http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd  http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
 		
-	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="910654bf-9fd9-4073-bad4-cf951b7f0022" >
+	<http:listener-config name="HTTP_Listener_config" doc:id="910654bf-9fd9-4073-bad4-cf951b7f0022" doc:name="HTTP Listener config">
 		<http:listener-connection host="0.0.0.0" port="${http.port}" />
 	</http:listener-config>
 	
-	<db:config name="Database_Config" doc:name="Database Config"
-		doc:id="6e89dec2-95e1-4ee2-a6c1-d722c45f3d20">
-		<db:my-sql-connection
-			host="${db.host}"
-			port="${db.port}" user="${db.user}" password="${db.password}"
-			database="${db.name}" />
+	<db:config name="Database_Config" doc:id="6e89dec2-95e1-4ee2-a6c1-d722c45f3d20" doc:name="Database Config">
+		<db:my-sql-connection database="${db.name}" host="${db.host}" password="${db.password}" port="${db.port}" user="${db.user}" />
 	</db:config>
 
-	<email:smtp-config name="Gmail_SMTP" doc:name="Email SMTP"
-		doc:id="8ba14ccd-a5b8-43a8-8281-cd433c852f2b">
-		<email:smtps-connection host="${smtp.host}"
-			port="${smtp.port}" user="${smtp.user}" password="${smtp.password}"
-			tlsContext="TLS_Context" />
+	<email:smtp-config name="Gmail_SMTP" doc:id="8ba14ccd-a5b8-43a8-8281-cd433c852f2b" doc:name="Email SMTP">
+		<email:smtps-connection host="${smtp.host}" password="${smtp.password}" port="${smtp.port}" tlsContext="TLS_Context" user="${smtp.user}" />
 	</email:smtp-config>
-	<tls:context name="TLS_Context" doc:name="TLS Context"
-		doc:id="233e532c-8296-4ddd-ac67-e2b7984b3609">
+	<tls:context name="TLS_Context" doc:id="233e532c-8296-4ddd-ac67-e2b7984b3609" doc:name="TLS Context">
 		<tls:trust-store insecure="true" />
 	</tls:context>
-	<salesforce:sfdc-config name="Salesforce_Sfdc_config"
-		doc:name="Salesforce Sfdc config" doc:id="0fd2a257-c65d-444d-bdc5-d66b5479a967">
-		<salesforce:basic-connection username="${sfdc.username}"
-			password="${sfdc.password}" securityToken="${sfdc.securityToken}" />
+	<salesforce:sfdc-config name="Salesforce_Sfdc_config" doc:id="0fd2a257-c65d-444d-bdc5-d66b5479a967" doc:name="Salesforce Sfdc config">
+		<salesforce:basic-connection password="${sfdc.password}" securityToken="${sfdc.securityToken}" username="${sfdc.username}" />
 	</salesforce:sfdc-config>
-	<configuration-properties file="mule-artifact.properties" doc:name="Configuration properties" doc:id="46877740-aac5-4812-8728-4718689aa9ec" />
-	<configuration-properties file="common.properties" doc:name="Configuration properties" doc:id="dffa4da7-cc5c-4ecb-922e-1115b4387354" />
-	<configuration-properties file="mule.${mule.env}.properties" doc:name="Configuration properties" doc:id="674beef8-9485-40a7-99b9-0685c9b7e863" />
-</mule>
+	<configuration-properties file="mule-artifact.properties" doc:id="46877740-aac5-4812-8728-4718689aa9ec" doc:name="Configuration properties" />
+	<configuration-properties file="common.properties" doc:id="dffa4da7-cc5c-4ecb-922e-1115b4387354" doc:name="Configuration properties" />
+	<configuration-properties file="mule.${mule.env}.properties" doc:id="674beef8-9485-40a7-99b9-0685c9b7e863" doc:name="Configuration properties" />
+<global-property doc:name="Global Property" name="mule.env" value="dev" /></mule>
