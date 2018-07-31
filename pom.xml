@@ -7,7 +7,7 @@
         <version>2.1.2</version>
     </parent>
     <artifactId>template-db2sfdc-account-migration</artifactId>
-    <version>2.1.0-SNAPSHOT</version>
+    <version>2.1.0</version>
     <packaging>mule-application</packaging>
     <name>template-db2sfdc-account-migration</name>
     <build>
@@ -105,4 +105,8 @@
             <layout>default</layout>
         </repository>
     </repositories>
+
+  <scm>
+    <tag>v2.1.0</tag>
+  </scm>
 </project>
