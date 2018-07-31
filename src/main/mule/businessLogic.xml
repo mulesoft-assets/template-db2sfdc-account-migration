@@ -74,12 +74,12 @@ payload map {
  ---
  "Migration Report: \n"
   
- ++ "\n Time [milliseconds]: " 		++ payload.elapsedTimeInMillis
- ++ "\n Total Records: "				++ payload.totalRecords
- ++ "\n Successful Records: "		++ payload.successfulRecords
- ++ "\n Failed Records: "			++ payload.failedRecords
- ++ "\n Loaded Records: "			++ payload.loadedRecords
- ++ "\n Processed Records: " 		++ payload.processedRecords]]></ee:set-payload>
+ ++ "\n Time [milliseconds]: " 		++ payload.elapsedTimeInMillis!
+ ++ "\n Total Records: "				++ payload.totalRecords!
+ ++ "\n Successful Records: "		++ payload.successfulRecords!
+ ++ "\n Failed Records: "			++ payload.failedRecords!
+ ++ "\n Loaded Records: "			++ payload.loadedRecords!
+ ++ "\n Processed Records: " 		++ payload.processedRecords!]]></ee:set-payload>
  							</ee:message>
  						</ee:transform>
  						<email:send config-ref="Gmail_SMTP" doc:name="Send migration result email"
