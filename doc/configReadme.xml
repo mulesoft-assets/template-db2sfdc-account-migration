@@ -114,9 +114,9 @@ This template has only an HTTP Listener connector as the way to trigger the use 
 		</section>
 		<section id="default_business_logic_xml">
 		<![CDATA[
-Functional aspect of the Template is implemented on this XML, directed by one flow responsible of excecuting the logic.
-For the pourpose of this particular Template the *mainFlow* excecutes a batch job that handles all its logic.
-This flow has Exception Strategy that basically consists on invoking the *defaultChoiseExceptionStrategy* defined in the *errorHandling.xml* file.
+The functional aspect of this template e is implemented on this XML, directed by one flow responsible of excecuting the logic.
+For the pourpose of this template, the *mainFlow* excecutes a batch job that handles all its logic.
+This flow has an exception strategy that basically consists on invoking the *defaultChoiseExceptionStrategy* defined in the *errorHandling.xml* file.
 ]]>
 		</section>
 	</sections>
