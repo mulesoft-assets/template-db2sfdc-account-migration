@@ -9,7 +9,7 @@ This template helps you migrate accounts from a database to a Salesforce instanc
 specify a filtering criteria, and specify a behavior when an account already exists in the destination instance. 
 
 This template leverages the batch module.
-The batch job is divided in *Process* and *On Complete* stages.
+The batch job is divided into *Process* and *On Complete* stages.
 Migration process starts from fetching all the existing accounts that match the filter criteria from the Database.
 Each database account is filtered depending if the database account also has an existing matching account in Salesforce.
 The last step of the *Process* stage groups the accounts and upserts them into the Salesforce instance based on the Name.
