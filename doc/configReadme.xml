@@ -18,17 +18,17 @@ Finally during the *On Complete* stage, the template outputs statistics data int
 		<section id="considerations">
 <![CDATA[
 To make this template run, there are certain preconditions that must be considered. All of them deal with the preparations in both source (Database) and destination (Salesforce) systems, that must be made in order for all to run smoothly. 
-**Failing to do so could lead to unexpected behavior of the template.**
+Failing to do so could lead to unexpected behavior of the template.
 
-This particular Anypoint Template illustrates the migration use case between Database and a Salesforce, thus it requires a Database instance to work.
+This template illustrates the migration use case between a database and Salesforce, thus it requires a database instance to work.
 ]]>
 		</section>
 		<section id="run_it">
 <![CDATA[
 
 **Note:** This template illustrates how to migrate between Salesforce and a database, which
-requires a Database instance to work. The template comes packaged with an SQL script to create 
-the database table that uses. It is the user responsibility to use that script to create the 
+requires a Database instance to work. The template comes packaged with a SQL script to create 
+the database table that uses. It is your responsibility to use the script to create the 
 table in an available schema and change the configuration accordingly. The SQL script file 
 can be found in src/main/resources/account.sql.
 
@@ -42,23 +42,23 @@ This template is customized for MySQL. To use it with different SQL implementati
 		</section>
 		<section id="running_on_standalone">
 <![CDATA[
-After this, to trigger the use case you just need to hit the local HTTP connector with the port you configured in your file. If this is, for instance, `9090` then you should hit: `http://localhost:9090/migrateaccounts` and this will output a summary report and send it in the e-mail.
+After this, to trigger the use case you need to browse to the local HTTP connector with the port you configured in your file. For instance, for `9090` browse to `http://localhost:9090/migrateaccounts` and this outputs a summary report and sends it to the emails configured.
 ]]>
 		</section>
 		<section id="running_on_cloudhub">
 <![CDATA[
 
-Once your app is all set and started, supposing you choose as domain name `db2sfdcaccountmigration` to trigger the use case you just need to hit `http://db2sfdcaccountmigration.cloudhub.io/migrateaccounts` and report will be sent to the e-mails configured.]]>
+Once your app is all set and started, if you choose as a domain name `db2sfdcaccountmigration` to trigger the use case, browse to `http://db2sfdcaccountmigration.cloudhub.io/migrateaccounts` and report is sent to the emails configured.]]>
 		</section>
 		<section id="application_configuration">
 		<![CDATA[
-**HTTP Connector configuration**
+**HTTP Connector Configuration**
 + http.port `9090`
 
-**Batch Aggregator configuration**
+**Batch Aggregator Configuration**
 + page.size `1000`
 
-**Database Connector configuration**
+**Database Connector Configuration**
 
 + db.host `localhost`
 + db.port `3306`
@@ -66,7 +66,7 @@ Once your app is all set and started, supposing you choose as domain name `db2sf
 + db.password `user-passwordA`
 + db.databasename `dbnameA`
 
-**SalesForce Connector configuration**
+**SalesForce Connector Configuration**
 
 + sfdc.username `joan.baez@org`
 + sfdc.password `JoanBaez456`
@@ -88,35 +88,35 @@ Once your app is all set and started, supposing you choose as domain name `db2sf
 		</section>
 		<section id="api_calls">
 		<![CDATA[
-Salesforce imposes limits on the number of API Calls that can be made. Therefore calculating this amount may be an important factor to consider. Account Migration Template calls to the API can be calculated using the formula:
+Salesforce imposes limits on the number of API calls that can be made. Therefore calculating this amount is important. This template's calls to the API can be calculated using this formula:
 
 ***1 + X / ${page.size}***
 
-Being ***X*** the number of Accounts to be synchronized on each run. 
+***X*** is the number of Accounts to be synchronized on each run. 
 
-The division by ***${page.size}*** is because, by default, Accounts are gathered in groups of ${page.size} for each Upsert API Call in the commit step. Also consider that this calls are executed repeatedly every polling cycle.	
+Divide by ***${page.size}*** because, by default, accounts are gathered in groups of ${page.size} for each upsert API call in the commit step. Also consider that this calls are executed repeatedly every polling cycle.	
 
-For instance if 10 records are fetched from origin instance, then 11 api calls will be made (1 + 10).
+For instance if 10 records are fetched from an origin instance, then 11 API calls are made (1 + 10).
 ]]>
 		</section>
 		<section id="default_endpoints_xml">
 		<![CDATA[
-This is the file where you will found the inbound and outbound sides of your integration app.
-This Template has only an [HTTP Listener Connector](http://www.mulesoft.org/documentation/display/current/HTTP+Listener+Connector) as the way to trigger the use case.
+This is the file where you find the inbound and outbound sides of your integration app.
+This template has only an HTTP Listener connector as the way to trigger the use case.
 
 **HTTP Listener Connector** - Start Report Generation
 
 + `${http.port}` is set as a property to be defined either on a property file or in CloudHub environment variables.
-+ The path configured by default is `migrateaccounts` and you are free to change for the one you prefer.
-+ The host name for all endpoints in your CloudHub configuration should be defined as `localhost`. CloudHub will then route requests from your application domain URL to the endpoint.
++ The path configured by default is `migrateaccounts` that you are free to change for the one you prefer.
++ The host name for all endpoints in your CloudHub configuration is `localhost`. CloudHub routes requests from your application domain URL to the endpoint.
 + The endpoint is a *request-response* and a result of calling it is the response with the total records fetched by the criteria specified.
 ]]>
 		</section>
 		<section id="default_business_logic_xml">
 		<![CDATA[
 Functional aspect of the Template is implemented on this XML, directed by one flow responsible of excecuting the logic.
-For the pourpose of this particular Template the *mainFlow* just excecutes a [Batch Job](http://www.mulesoft.org/documentation/display/current/Batch+Processing). which handles all the logic of it.
-This flow has Exception Strategy that basically consists on invoking the *defaultChoiseExceptionStrategy* defined in *errorHandling.xml* file.
+For the pourpose of this particular Template the *mainFlow* excecutes a batch job that handles all its logic.
+This flow has Exception Strategy that basically consists on invoking the *defaultChoiseExceptionStrategy* defined in the *errorHandling.xml* file.
 ]]>
 		</section>
 	</sections>
