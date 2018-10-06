@@ -26,21 +26,22 @@ Note that using this template is subject to the conditions of this [License Agre
 Please review the terms of the license before downloading and using this template. In short, you are allowed to use the template for free with Mule ESB Enterprise Edition, CloudHub, or as a trial in Anypoint Studio.
 
 # Use Case <a name="usecase"/>
-This Template should serve as a foundation for the process of migrating accounts from Database to Salesforce instance, being able to specify filtering criteria and desired behavior when an account already exists in the destination instance. 
+This template helps you migrate accounts from a database to a Salesforce instance, 
+specify a filtering criteria, and specify a behavior when an account already exists in the destination instance. 
 
-As implemented, this Template leverages the [Batch Module](http://www.mulesoft.org/documentation/display/current/Batch+Processing).
-The batch job is divided in *Process* and *On Complete* stages.
-Migration process starts from fetching all the existing Accounts that match the filter criteria from Database.
-Each database Account will be filtered depending if it has an existing matching Account in the Salesforce.
-The last step of the *Process* stage will group the accounts and upsert them in Salesforce instance based on the Name.
-Finally during the *On Complete* stage the Template will both output statistics data into the console and send a notification email with the results of the batch execution.
+This template leverages the batch module.
+The batch job is divided into *Process* and *On Complete* stages.
+Migration process starts from fetching all the existing accounts that match the filter criteria from the Database.
+Each database account is filtered depending if the database account also has an existing matching account in Salesforce.
+The last step of the *Process* stage groups the accounts and upserts them into the Salesforce instance based on the Name.
+Finally during the *On Complete* stage, the template outputs statistics data into the console and sends a notification email with the results of the batch execution.
 
 # Considerations <a name="considerations"/>
 
-To make this Anypoint Template run, there are certain preconditions that must be considered. All of them deal with the preparations in both source (Database) and destination (Salesforce) systems, that must be made in order for all to run smoothly. 
-**Failing to do so could lead to unexpected behavior of the template.**
+To make this template run, there are certain preconditions that must be considered. All of them deal with the preparations in both source (Database) and destination (Salesforce) systems, that must be made in order for all to run smoothly. 
+Failing to do so could lead to unexpected behavior of the template.
 
-This particular Anypoint Template illustrates the migration use case between Database and a Salesforce, thus it requires a Database instance to work.
+This template illustrates the migration use case between a database and Salesforce, thus it requires a database instance to work.
 
 ## DB Considerations <a name="dbconsiderations"/>
 
@@ -91,16 +92,18 @@ There are no particular considerations for this Anypoint Template regarding Sale
 
 # Run it! <a name="runit"/>
 Simple steps to get Database to Salesforce Account Migration running.
-**Note:** This particular Anypoint Template illustrates the migration use case between Salesforce and a Database, thus it requires a Database instance to work.
-The Anypoint Template comes packaged with a SQL script to create the database table that uses. 
-It is the user responsibility to use that script to create the table in an available schema and change the configuration accordingly. The SQL script file can be found in [src/main/resources/account.sql](../master/src/main/resources/account.sql).
+**Note:** This template illustrates how to migrate between Salesforce and a database, which
+requires a Database instance to work. The template comes packaged with a SQL script to create 
+the database table that uses. It is your responsibility to use the script to create the 
+table in an available schema and change the configuration accordingly. The SQL script file 
+can be found in src/main/resources/account.sql.
 
 This template is customized for MySQL. To use it with different SQL implementation, some changes are necessary:
 
-* update SQL script dialect to desired one
-* replace MySQL driver library (or add another) dependency to desired one in [POM](pom.xml)
-* update Database Config to suitable connection instead of `db:my-sql-connection` in global elements (config.xml)
-* update connection configurations in `mule.*.properties` file
+* Update the SQL script dialect to desired one.
+* Replace MySQL driver library (or add another) dependency to desired one in the pom.xml file.
+* Update Database Config to suitable connection instead of `db:my-sql-connection` in global elements (config.xml).
+* Update connection configurations in `mule.*.properties` file.
 
 ## Running on premise <a name="runonopremise"/>
 In this section we detail the way you should run your Anypoint Template on your computer.
@@ -136,11 +139,11 @@ Once you have imported you Anypoint Template into Anypoint Studio you need to fo
 
 ### Running on Mule ESB stand alone <a name="runonmuleesbstandalone"/>
 Complete all properties in one of the property files, for example in [mule.prod.properties] (../master/src/main/resources/mule.prod.properties) and run your app with the corresponding environment variable to use it. To follow the example, this will be `mule.env=prod`. 
-After this, to trigger the use case you just need to hit the local HTTP connector with the port you configured in your file. If this is, for instance, `9090` then you should hit: `http://localhost:9090/migrateaccounts` and this will output a summary report and send it in the e-mail.
+After this, to trigger the use case you need to browse to the local HTTP connector with the port you configured in your file. For instance, for `9090` browse to `http://localhost:9090/migrateaccounts` and this outputs a summary report and sends it to the emails configured.
 
 ## Running on CloudHub <a name="runoncloudhub"/>
 While [creating your application on CloudHub](http://www.mulesoft.org/documentation/display/current/Hello+World+on+CloudHub) (Or you can do it later as a next step), you need to go to Deployment > Advanced to set all environment variables detailed in **Properties to be configured** as well as the **mule.env**.
-Once your app is all set and started, supposing you choose as domain name `db2sfdcaccountmigration` to trigger the use case you just need to hit `http://db2sfdcaccountmigration.cloudhub.io/migrateaccounts` and report will be sent to the e-mails configured.
+Once your app is all set and started, if you choose as a domain name `db2sfdcaccountmigration` to trigger the use case, browse to `http://db2sfdcaccountmigration.cloudhub.io/migrateaccounts` and report is sent to the emails configured.
 
 ### Deploying your Anypoint Template on CloudHub <a name="deployingyouranypointtemplateoncloudhub"/>
 Mule Studio provides you with really easy way to deploy your Template directly to CloudHub, for the specific steps to do so please check this [link](http://www.mulesoft.org/documentation/display/current/Deploying+Mule+Applications#DeployingMuleApplications-DeploytoCloudHub)
@@ -149,13 +152,13 @@ Mule Studio provides you with really easy way to deploy your Template directly t
 ## Properties to be configured (With examples) <a name="propertiestobeconfigured"/>
 In order to use this Mule Anypoint Template you need to configure properties (Credentials, configurations, etc.) either in properties file or in CloudHub as Environment Variables. Detail list with examples:
 ### Application configuration
-**HTTP Connector configuration**
+**HTTP Connector Configuration**
 + http.port `9090`
 
-**Batch Aggregator configuration**
+**Batch Aggregator Configuration**
 + page.size `1000`
 
-**Database Connector configuration**
+**Database Connector Configuration**
 
 + db.host `localhost`
 + db.port `3306`
@@ -163,7 +166,7 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 + db.password `user-passwordA`
 + db.databasename `dbnameA`
 
-**SalesForce Connector configuration**
+**SalesForce Connector Configuration**
 
 + sfdc.username `joan.baez@org`
 + sfdc.password `JoanBaez456`
@@ -183,15 +186,15 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 + mail.subject `Batch Job Finished Report`
 
 # API Calls <a name="apicalls"/>
-Salesforce imposes limits on the number of API Calls that can be made. Therefore calculating this amount may be an important factor to consider. Account Migration Template calls to the API can be calculated using the formula:
+Salesforce imposes limits on the number of API calls that can be made. Therefore calculating this amount is important. This template's calls to the API can be calculated using this formula:
 
 ***1 + X / ${page.size}***
 
-Being ***X*** the number of Accounts to be synchronized on each run. 
+***X*** is the number of Accounts to be synchronized on each run. 
 
-The division by ***${page.size}*** is because, by default, Accounts are gathered in groups of ${page.size} for each Upsert API Call in the commit step. Also consider that this calls are executed repeatedly every polling cycle.	
+Divide by ***${page.size}*** because, by default, accounts are gathered in groups of ${page.size} for each upsert API call in the commit step. Also consider that this calls are executed repeatedly every polling cycle.	
 
-For instance if 10 records are fetched from origin instance, then 11 api calls will be made (1 + 10).
+For instance if 10 records are fetched from an origin instance, then 11 API calls are made (1 + 10).
 
 
 # Customize It!<a name="customizeit"/>
@@ -214,21 +217,21 @@ In the visual editor they can be found on the *Global Element* tab.
 
 
 ## businessLogic.xml<a name="businesslogicxml"/>
-Functional aspect of the Template is implemented on this XML, directed by one flow responsible of excecuting the logic.
-For the pourpose of this particular Template the *mainFlow* just excecutes a [Batch Job](http://www.mulesoft.org/documentation/display/current/Batch+Processing). which handles all the logic of it.
-This flow has Exception Strategy that basically consists on invoking the *defaultChoiseExceptionStrategy* defined in *errorHandling.xml* file.
+The functional aspect of this template e is implemented on this XML, directed by one flow responsible of excecuting the logic.
+For the pourpose of this template, the *mainFlow* excecutes a batch job that handles all its logic.
+This flow has an exception strategy that basically consists on invoking the *defaultChoiseExceptionStrategy* defined in the *errorHandling.xml* file.
 
 
 
 ## endpoints.xml<a name="endpointsxml"/>
-This is the file where you will found the inbound and outbound sides of your integration app.
-This Template has only an [HTTP Listener Connector](http://www.mulesoft.org/documentation/display/current/HTTP+Listener+Connector) as the way to trigger the use case.
+This is the file where you find the inbound and outbound sides of your integration app.
+This template has only an HTTP Listener connector as the way to trigger the use case.
 
 **HTTP Listener Connector** - Start Report Generation
 
 + `${http.port}` is set as a property to be defined either on a property file or in CloudHub environment variables.
-+ The path configured by default is `migrateaccounts` and you are free to change for the one you prefer.
-+ The host name for all endpoints in your CloudHub configuration should be defined as `localhost`. CloudHub will then route requests from your application domain URL to the endpoint.
++ The path configured by default is `migrateaccounts` that you are free to change for the one you prefer.
++ The host name for all endpoints in your CloudHub configuration is `localhost`. CloudHub routes requests from your application domain URL to the endpoint.
 + The endpoint is a *request-response* and a result of calling it is the response with the total records fetched by the criteria specified.
 
 
