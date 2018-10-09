@@ -1,6 +1,12 @@
 
 # Anypoint Template: Database to Salesforce Account Migration
 
+![9a83dda1-6ab9-4414-aa56-d61c1178457d-image.png](https://exchange2-file-upload-service-kprod.s3.us-east-1.amazonaws.com:443/9a83dda1-6ab9-4414-aa56-d61c1178457d-image.png)
+
+[//]: # (![]\(https://www.youtube.com/embed/RA7ZA9Z6tFw?wmode=transparent\)
+
+[![YouTube Video](http://img.youtube.com/vi/RA7ZA9Z6tFw/0.jpg)](https://www.youtube.com/watch?v=RA7ZA9Z6tFw)
+
 # License Agreement
 This template is subject to the conditions of the 
 <a href="https://s3.amazonaws.com/templates-examples/AnypointTemplateLicense.pdf">MuleSoft License Agreement</a>.
@@ -13,23 +19,22 @@ specify a filtering criteria, and specify a behavior when an account already exi
 
 This template leverages the batch module.
 The batch job is divided into *Process* and *On Complete* stages.
-Migration process starts from fetching all the existing accounts that match the filter criteria from the Database.
+
+- Migration process starts from fetching all the existing accounts that match the filter criteria from the Database.
 Each database account is filtered depending if the database account also has an existing matching account in Salesforce.
-The last step of the *Process* stage groups the accounts and upserts them into the Salesforce instance based on the Name.
-Finally during the *On Complete* stage, the template outputs statistics data into the console and sends a notification email with the results of the batch execution.
+- The last step of the *Process* stage groups the accounts and upserts them into the Salesforce instance based on the Name.
+- Finally during the *On Complete* stage, the template outputs statistics data into the console and sends a notification email with the results of the batch execution.
 
 # Considerations
 
-To make this template run, there are certain preconditions that must be considered. All of them deal with the preparations in both source (Database) and destination (Salesforce) systems, that must be made in order for all to run smoothly. 
-Failing to do so could lead to unexpected behavior of the template.
+To make this template run, there are certain preconditions that must be considered. All of them deal with the preparations in both source (Database) and destination (Salesforce) systems, that must be made for the application to run smoothly. 
+Failing to do so can lead to unexpected behavior of the template.
 
 This template illustrates the migration use case between a database and Salesforce, thus it requires a database instance to work.
 
-## DB Considerations
+## Database Considerations
 
-To get this template to work:
-
-This template may use date time or timestamp fields from the database to do comparisons and take further actions.
+This template uses date time or timestamp fields from the database to do comparisons and take further actions.
 While the template handles the time zone by sending all such fields in a neutral time zone, it cannot handle time offsets.
 We define time offsets as the time difference that may surface between date time and timestamp fields from different systems due to a differences in the system's internal clock.
 Take this in consideration and take the actions needed to avoid the time offset.
@@ -38,12 +43,9 @@ Take this in consideration and take the actions needed to avoid the time offset.
 
 There are no considerations with using a database as a data origin.
 
-
 ## Salesforce Considerations
 
-Here's what you need to know about Salesforce to get this template to work.
-
-### FAQ
+Here's what you need to know about Salesforce to get this template to work:
 
 - Where can I check that the field configuration for my Salesforce instance is the right one? See: <a href="https://help.salesforce.com/HTViewHelpDoc?id=checking_field_accessibility_for_a_particular_field.htm&language=en_US">Salesforce: Checking Field Accessibility for a Particular Field</a>
 - Can I modify the Field Access Settings? How? See: <a href="https://help.salesforce.com/HTViewHelpDoc?id=modifying_field_access_settings.htm&language=en_US">Salesforce: Modifying Field Access Settings</a>
@@ -52,14 +54,6 @@ Here's what you need to know about Salesforce to get this template to work.
 ### As a Data Destination
 
 There are no considerations with using Salesforce as a data destination.
-
-
-
-
-
-
-
-
 
 # Run it!
 Simple steps to get Database to Salesforce Account Migration running.
@@ -183,8 +177,8 @@ In the Studio visual editor, the properties are on the *Global Element* tab.
 
 
 ## businessLogic.xml
-The functional aspect of this template e is implemented on this XML, directed by one flow responsible of excecuting the logic.
-For the pourpose of this template, the *mainFlow* excecutes a batch job that handles all its logic.
+The functional aspect of this template e is implemented on this XML, directed by one flow responsible of executing the logic.
+For the pourpose of this template, the *mainFlow* executes a batch job that handles all its logic.
 This flow has an exception strategy that basically consists on invoking the *defaultChoiseExceptionStrategy* defined in the *errorHandling.xml* file.
 
 
@@ -200,12 +194,6 @@ This template has only an HTTP Listener connector as the way to trigger the use 
 + The host name for all endpoints in your CloudHub configuration is `localhost`. CloudHub routes requests from your application domain URL to the endpoint.
 + The endpoint is a *request-response* and a result of calling it is the response with the total records fetched by the criteria specified.
 
-
-
 ## errorHandling.xml
 This is the right place to handle how your integration reacts depending on the different exceptions. 
 This file provides error handling that is referenced by the main flow in the business logic.
-
-
-
-
