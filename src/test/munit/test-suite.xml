@@ -141,7 +141,7 @@ payload filter ($.Name == vars.testRecords[2].Name and $.NumberOfEmployees as Nu
 		<munit:validation >
 			<munit-tools:assert-that doc:name="Assert that we didn't find Account" doc:id="1e559409-a86b-47b9-bb44-cbcac54c4ade" expression="#[sizeOf(vars.noRecord)]" is="#[MunitTools::equalTo(0)]" message="Account shouldn't be migrated"/>
 			<munit-tools:assert-that doc:name="Assert that we found migrated Account" doc:id="a8f4453a-10c6-4508-8ecf-64cc08e6129c" expression="#[sizeOf(vars.createdRecord)]" is="#[MunitTools::equalTo(1)]" message="Account should be created"/>
-			<munit-tools:assert-that doc:name="Assert that Number of employees was updated" doc:id="798bd6c1-88b2-4cc9-916d-ed7cb4adc0c8" expression="#[sizeOf(vars.updatedRecord)]" is='#[MunitTools::equalTo(1)]' message="Account shouldn be updated"/>
+			<munit-tools:assert-that doc:name="Assert that Number of employees was updated" doc:id="798bd6c1-88b2-4cc9-916d-ed7cb4adc0c8" expression="#[sizeOf(vars.updatedRecord)]" is='#[MunitTools::equalTo(1)]' message="Account should be updated"/>
 			<munit-tools:verify-call doc:name="Verify Salesforce Bulk Upsert call" doc:id="f4f989d4-acdc-459a-90fc-837f12dbf772" processor="salesforce:upsert-bulk" times="1"/>
 		</munit:validation>
 	</munit:test>
