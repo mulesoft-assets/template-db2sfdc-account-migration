@@ -16,9 +16,6 @@ http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/ba
 http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
 	
 	<flow name="businessLogicFlow" doc:id="884f86c5-66e1-4701-bb9b-594c2a60abf3" >
-		<db:select config-ref="Database_Config" doc:name="Select accounts from DB" doc:id="2d2d30b8-b220-4e0b-84a8-f10d02ac13e8" >
-			<db:sql >SELECT AccountNumber, Description, Name, NumberOfEmployees, Phone, Type, Industry, LastModifiedDate FROM Account WHERE NumberOfEmployees &gt; 5000 AND (Industry = 'Education' OR Industry = 'Government')</db:sql>
-		</db:select>
 		<batch:job jobName="migrateAccountsBatch" doc:id="79b373e6-1aeb-43a9-9dfe-8ac0d2f31fdc" >
 			<batch:process-records >
 				<batch:step name="getAccountInSalesforceStep" doc:id="232087de-e311-49c1-a890-439c65ea1af2" >
@@ -94,7 +91,13 @@ payload map {
 			</batch:on-complete>
 		</batch:job>
 	</flow>
+	<sub-flow name="queryDBSubFlow" doc:id="d80e07e2-9668-405c-9d35-9cfcc1b24e66" >
+		<db:select config-ref="Database_Config" doc:name="Select accounts from DB" doc:id="2d2d30b8-b220-4e0b-84a8-f10d02ac13e8">
+			<db:sql>SELECT AccountNumber, Description, Name, NumberOfEmployees, Phone, Type, Industry, LastModifiedDate FROM Account WHERE NumberOfEmployees &gt; 5000 AND (Industry = 'Education' OR Industry = 'Government')</db:sql>
+		</db:select>
+	</sub-flow>
 	<flow name="mainFlow" doc:id="7c0a5bef-b3d5-442f-bff3-10d038f69a5e" >
+		<flow-ref doc:name="Call queryDBSubFlow" doc:id="4bbb03cf-6efe-4462-88de-2b3a21169fb4" name="queryDBSubFlow"/>
 		<flow-ref doc:name="Trigger migrateAccountsBatch" doc:id="91360ede-4d71-44c7-9b64-8ee762e04ea0" name="businessLogicFlow"/>
 		<error-handler >
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="488b507d-e26c-4c56-8759-8bb4f6645d71" type="ANY">
