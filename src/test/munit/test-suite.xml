@@ -82,8 +82,8 @@ output application/java
 			</ee:message>
 		</ee:transform>
 		<salesforce:create doc:name="Create Account in SFDC" doc:id="6e3a84f4-6cbc-475c-8616-86d12f47819e" config-ref="Salesforce_Sfdc_config" type="Account"/>
-		<set-variable value="#[payload map ($.id)]" doc:name="Store IDs to variable sfdcIds" doc:id="623a0d4f-c873-45e6-a7ee-89bc1e194721" variableName="sfdcIds" />
-		<munit-tools:mock-when doc:name="Mock email processor to avoid sending email" doc:id="17ab3357-3f08-4456-9f14-c41c281e06f1" processor="email:send">
+        <set-variable value="#[payload.items map ($.id)]" doc:name="Store IDs to variable sfdcIds" doc:id="623a0d4f-c873-45e6-a7ee-89bc1e194721" variableName="sfdcIds" />
+        <munit-tools:mock-when doc:name="Mock email processor to avoid sending email" doc:id="17ab3357-3f08-4456-9f14-c41c281e06f1" processor="email:send">
 				<munit-tools:then-return />
 			</munit-tools:mock-when>
 	</munit:before-test>
@@ -142,15 +142,14 @@ payload filter ($.Name == vars.testRecords[2].Name and $.NumberOfEmployees as Nu
 			<munit-tools:assert-that doc:name="Assert that we didn't find Account" doc:id="1e559409-a86b-47b9-bb44-cbcac54c4ade" expression="#[sizeOf(vars.noRecord)]" is="#[MunitTools::equalTo(0)]" message="Account shouldn't be migrated"/>
 			<munit-tools:assert-that doc:name="Assert that we found migrated Account" doc:id="a8f4453a-10c6-4508-8ecf-64cc08e6129c" expression="#[sizeOf(vars.createdRecord)]" is="#[MunitTools::equalTo(1)]" message="Account should be created"/>
 			<munit-tools:assert-that doc:name="Assert that Number of employees was updated" doc:id="798bd6c1-88b2-4cc9-916d-ed7cb4adc0c8" expression="#[sizeOf(vars.updatedRecord)]" is='#[MunitTools::equalTo(1)]' message="Account should be updated"/>
-			<munit-tools:verify-call doc:name="Verify Salesforce Bulk Upsert call" doc:id="f4f989d4-acdc-459a-90fc-837f12dbf772" processor="salesforce:upsert-bulk" times="1"/>
 		</munit:validation>
 	</munit:test>
 	<munit:after-test name="test-suiteAfter_Test" description="After tests actions" doc:id="5b85bb9e-67e6-47f7-8f71-53a39f147fc8" >
 		<db:delete doc:name="Delete Accounts from DB" doc:id="6aff5b09-2af5-4627-8aa7-a0ac361bbd81" config-ref="Database_Config">
 			<db:sql >DELETE FROM Account WHERE Name LIKE 'TestAccountDB2SFDC%'</db:sql>
 		</db:delete>
-		<salesforce:delete doc:name="Delete Accounts from SFDC" doc:id="9c3d62eb-6ef1-4b73-845b-6acd244996bf" config-ref="Salesforce_Sfdc_config">
-			<salesforce:delete-ids ><![CDATA[#[vars.sfdcIds]]]></salesforce:delete-ids>
+        <salesforce:delete doc:name="Delete Accounts from SFDC" doc:id="9c3d62eb-6ef1-4b73-845b-6acd244996bf" config-ref="Salesforce_Sfdc_config">
+			<salesforce:ids ><![CDATA[#[vars.sfdcIds]]]></salesforce:ids>
 		</salesforce:delete>
 	</munit:after-test>
 

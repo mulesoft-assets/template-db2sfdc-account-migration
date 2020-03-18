@@ -19,20 +19,20 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 		<batch:job jobName="migrateAccountsBatch" doc:id="79b373e6-1aeb-43a9-9dfe-8ac0d2f31fdc" >
 			<batch:process-records >
 				<batch:step name="getAccountInSalesforceStep" doc:id="232087de-e311-49c1-a890-439c65ea1af2" >
-					<salesforce:query-single config-ref="Salesforce_Sfdc_config" doc:name="Query account in Salesforce" doc:id="573f94bc-79b9-4219-b6bd-65200b61b7a2" target="IdInSF">
+					<salesforce:query config-ref="Salesforce_Sfdc_config" doc:name="Query account in Salesforce" doc:id="573f94bc-79b9-4219-b6bd-65200b61b7a2" target="IdInSF">
 						<salesforce:salesforce-query >SELECT Id FROM Account WHERE Name = ':name'</salesforce:salesforce-query>
 						<salesforce:parameters ><![CDATA[#[output applicaton/java
 ---
 {
 	"name" : payload.Name
 }]]]></salesforce:parameters>
-					</salesforce:query-single>
-					<ee:transform doc:name="Push Id to payload" doc:id="5e6ecafa-54e0-4014-a786-899ba03a102f" >
+					</salesforce:query>
+                    <ee:transform doc:name="Push Id to payload" doc:id="5e6ecafa-54e0-4014-a786-899ba03a102f" >
 						<ee:message >
 							<ee:set-payload ><![CDATA[%dw 2.0
 output application/java
 ---
-payload ++ vars.IdInSF]]></ee:set-payload>
+payload ++ if (isEmpty(vars.IdInSF)) {} else vars.IdInSF[0]]]></ee:set-payload>
 						</ee:message>
 					</ee:transform>
 				</batch:step>
@@ -40,7 +40,9 @@ payload ++ vars.IdInSF]]></ee:set-payload>
 					<batch:aggregator doc:name="Batch Aggregator" doc:id="1ad86a98-643e-494a-a90a-32daab0b03cc" size="${page.size}">
 						<ee:transform doc:name="Map database fields to Salesforce fields" doc:id="d484063f-6d81-42ce-98ef-7cec51b04672" >
 							<ee:message >
-								<ee:set-payload ><![CDATA[%dw 2.0
+							</ee:message>
+                            <ee:variables >
+                                <ee:set-variable variableName="accounts" ><![CDATA[%dw 2.0
 output application/java
 ---
 payload map {
@@ -50,10 +52,15 @@ payload map {
 	Name: $.Name,
 	Industry: $.Industry,
 	NumberOfEmployees: $.NumberOfEmployees
-}]]></ee:set-payload>
-							</ee:message>
+}]]></ee:set-variable>
+                            </ee:variables>
 						</ee:transform>
-						<salesforce:upsert-bulk config-ref="Salesforce_Sfdc_config" type="Account" externalIdFieldName="Id" doc:name="Upsert bulk - Accounts in Salesforce" doc:id="26dee78b-3cbd-41d7-a260-538058420b0e" />
+						<salesforce:create-job doc:name="Upsert job - Accounts in Salesforce" doc:id="7f8299ec-cc86-42e8-8cde-4d0cc4a623ba" config-ref="Salesforce_Sfdc_config" operation="upsert" type="Account">
+                            <salesforce:create-job-request><![CDATA[#[externalIdFieldName: "Id"]]]></salesforce:create-job-request>
+                        </salesforce:create-job>
+                        <salesforce:create-batch doc:name="Upsert batch - Accounts in Salesforce" doc:id="e6252b25-3bcd-4a05-866d-a4f8b6a565c7" config-ref="Salesforce_Sfdc_config" jobInfoBatch="#[payload]">
+                            <salesforce:objects ><![CDATA[#[vars.accounts]]]></salesforce:objects>
+                        </salesforce:create-batch>
 					</batch:aggregator>
 				</batch:step>
 			</batch:process-records>
